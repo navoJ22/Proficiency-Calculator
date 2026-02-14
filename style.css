@@ -747,15 +747,20 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .aboutscreen>div {
 	display: flex;
+	align-items: center;
 }
 
 .aboutscreen>div>div>h2 {
-	height: 50px;
 }
 
 .aboutscreen img {
-	width: 680px;
+	width: 50%;
 }
+
+.abouthalf{
+	min-width: 50%;
+}
+
 
 /* #endregion */
 
@@ -1213,13 +1218,13 @@ input[type="number"]::-webkit-outer-spin-button {
         flex-direction: column;
     }    
     
-    .aboutscreen>div>div {}    .aboutscreen>div>div>h2 {
-        height: 50px;
-        font-size: 48px;
+    .aboutscreen>div>div>h2 {
     }
     .aboutscreen img {
         width: 100%;
     }
+	.aboutscreen>div{
+		overflow-y: scroll;
+	}
 }
-
 /* #endregion */
