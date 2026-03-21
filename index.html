@@ -7,6 +7,20 @@
 	<title>Proficiency Calculator</title>
 	<link rel="stylesheet" href="style.css">
 	<link rel="icon" href="assets/favicon.png">
+	
+	<meta property="og:title" content="Proficiency Calculator">
+	<meta property="og:description" content="Check how much time would it take to reach desired level">
+	<meta property="og:image" content="https://navoj22.github.io/Proficiency-Calculator/assets/new.png">
+	<meta property="og:image:width" content="1280">
+	<meta property="og:image:height" content="720">
+	<meta property="og:url" content="https://navoj22.github.io/Proficiency-Calculator/">
+	<meta property="og:type" content="website">
+	
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:title" content="Proficiency Calculator">
+	<meta name="twitter:description" content="Check how much time it would take to reach your desired level">
+	<meta name="twitter:image" content="https://navoj22.github.io/Proficiency-Calculator/assets/new.png">
+	
 </head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-WENHC28MQN"></script>
@@ -47,7 +61,12 @@
 				<div class="infobutton"></div>
 			</div>
 			<div class="rightcontent">
-				<div class="rankinput reworked">
+				<div id="noHeroMessage" style="text-align:center; font-size:24px;">
+					<div id="selectHeroText" style="cursor:pointer;">Select Hero</div>
+					<br><br>
+					<div id="readGuideText" style="cursor:pointer;">How To Use</div>
+				</div>
+				<div class="rankinput reworked" id="mainInputs">
 
 					<div class="rank-top">
 						<div class="rankpicker">
@@ -87,11 +106,12 @@
 
 				</div>
 			</div>
+
 			<div class="infobar">
 				<a class="creditsbutton" id="credits">
 					<h3>Credits</h3>
 				</a>
-				<h3>Send Your Feedback <a href="https://discord.gg/pSa8RHk6">here</a></h3>
+				<h3>Send Your Feedback <a href="mailto:navojdevelopment+calc@gmail.com?subject=Proficiency%20Calculator" target="_blank">here</a></h3>
 				<a class="aboutbutton" id="about">
 					<h3>About The Website</h3>
 				</a>
@@ -138,6 +158,7 @@
 				<h2 class="assistants">cruelshrimp</h2>
 				<h2 class="assistants">NightFoxAhri</h2>
 				<h2 class="assistants">Demitri7</h2>
+				<h2 class="assistants">DragIsPro</h2>
 			</div>
 			<h2 class="creditsend">Updating it to S6 was much faster with their help 💙</h2>
 		</div>
@@ -147,19 +168,32 @@
 		<div class="aboutscreen">
 			<h1>About The Website</h1>
 			<div>
-				<div>
-					<h2>Outdated <a href="https://navoj22.github.io/Proficiency-Calculator-Old/">Proficiency Calculator</a>
-						S0 - S5.5 Rip 💔</h2>
-					<img src="assets/old.png" alt="">
+				<div class="abouthalf">
+					<div>
+						<h2>Outdated <a href="https://navoj22.github.io/Proficiency-Calculator-Old/">Proficiency Calculator</a>
+							S0 - S5.5 Rip 💔</h2>
+						<img src="assets/old.png" alt="">
+					</div>
+					<div>
+						<h2><a href="https://github.com/navoJ22/Proficiency-Calculator">Github Repo</a></h2>
+						<img src="assets/new.png" alt="">
+					</div>
 				</div>
-				<div>
-					<h2><a href="https://github.com/navoJ22/Proficiency-Calculator">Github Repo</a></h2>
-					<img src="assets/new.png" alt="">
+				<div class="abouthalf">
+					<h1>Change Log V3.2</h1>
+					<p>- White Fox</p>
+					<p>- Changed page when hero is not selected</p>
+					<p>- Updated CSS (Design)</p>
+					<p>- Bugfixed</p>
+					<p>- Warning if some inputs are empty</p>
+					<p>- New secrets to discover 👀</p>
 				</div>
 			</div>
+			<h3>This website is not affiliated with, endorsed by, or sponsored by NetEase or Marvel Rivals. All trademarks and game assets belong to their respective owners.</h3>
 		</div>
 	</div>
 
+	
 
 	<script src="script.js"></script>
 </body>

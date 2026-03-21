@@ -52,14 +52,14 @@ function heroPickerImg(name){ return `assets/hero/${heroToFile(name)}.png`; }
 function heroDisplayImg(name){ return `assets/displayicon/${heroToFile(name)}.png`; }
 
 const heroNames = ["Adam Warlock","Angela","Black Panther","Black Widow","Blade","Bruce Banner",
-	"Captain America","Cloak & Dagger","Daredevil","Doctor Strange", "Deadpool",
+	"Captain America","Cloak & Dagger","Daredevil","Doctor Strange", "Deadpool", "Elsa Bloodstone",
 	"Emma Frost","Gambit","Groot","Hawkeye","Hela","Human Torch",
 	"Invisible Woman","Iron Fist","Iron Man","Jeff the Land Shark",
 	"Loki","Luna Snow","Magik","Magneto","Mantis","Mister Fantastic",
 	"Moon Knight","Namor","Peni Parker","Phoenix","Psylocke",
 	"Rocket Raccoon","Rogue","Scarlet Witch","Spider-Man",
 	"Squirrel Girl","Star-Lord","Storm","The Punisher","The Thing",
-	"Thor","Ultron","Venom","Winter Soldier","Wolverine"];
+	"Thor","Ultron","Venom","White Fox", "Winter Soldier","Wolverine"];
 
 const heroes = heroNames.map(name => ({ name, pickerImg: heroPickerImg(name), displayImg: heroDisplayImg(name) }));
 
@@ -83,6 +83,7 @@ const heroMissions = {
 	"Daredevil": { 			role: "Duelist", 	mission2: { "1-4": 3700, "5-9": 7500, "10-14": 11000, "15-70": 15000 }, mission3: { "1-4": 5, "5-9": 10, "10-14": 15, "15-70": 20 } },
 	"Deadpool": { 			role: "Special", 	mission2: { "1-4": 5700, "5-9": 11000, "10-14": 17000, "15-70": 23000 }, mission3: { "1-4": 5, "5-9": 30, "10-14": 45, "15-70": 60 }, 	mission2Name: "Damage and Healing", mission3Name: "KOs & Assists" },
 	"Doctor Strange": { 	role: "Vanguard", 	mission2: { "1-4": 10000, "5-9": 21000, "10-14": 31000, "15-70": 42000 }, mission3: { "1-4": 6, "5-9": 13, "10-14": 19, "15-70": 25 } },
+	"Elsa Bloodstone": { 	role: "Duelist", 	mission2: { "1-4": 5700, "5-9": 11000, "10-14": 17000, "15-70": 23000 }, mission3: { "1-4": 6, "5-9": 11, "10-14": 17, "15-70": 23 } },
 	"Emma Frost": { 		role: "Vanguard", 	mission2: { "1-4": 10000, "5-9": 21000, "10-14": 31000, "15-70": 42000 }, mission3: { "1-4": 7, "5-9": 15, "10-14": 22, "15-70": 29 } },
 	"Gambit": { 			role: "Strategist", mission2: { "1-4": 4500, "5-9": 9100, "10-14": 14000, "15-70": 18000 }, mission3: { "1-4": 15, "5-9": 30, "10-14": 45, "15-70": 60 } },
 	"Groot": { 				role: "Vanguard", 	mission2: { "1-4": 14000, "5-9": 27000, "10-14": 41000, "15-70": 55000 }, mission3: { "1-4": 6, "5-9": 13, "10-14": 19, "15-70": 25 } },
@@ -116,6 +117,7 @@ const heroMissions = {
 	"Thor": { 				role: "Vanguard", 	mission2: { "1-4": 9000, "5-9": 18000, "10-14": 27000, "15-70": 36000 }, mission3: { "1-4": 6, "5-9": 13, "10-14": 19, "15-70": 25 } },
 	"Ultron": { 			role: "Strategist", mission2: { "1-4": 5400, "5-9": 11000, "10-14": 16000, "15-70": 21000 }, mission3: { "1-4": 17, "5-9": 35, "10-14": 52, "15-70": 70 } },
 	"Venom": { 				role: "Vanguard", 	mission2: { "1-4": 10000, "5-9": 21000, "10-14": 31000, "15-70": 42000 }, mission3: { "1-4": 6, "5-9": 13, "10-14": 19, "15-70": 25 } },
+	"White Fox": {		 	role: "Strategist", mission2: { "1-4": 5400, "5-9": 11000, "10-14": 16000, "15-70": 21000 }, mission3: { "1-4": 15, "5-9": 30, "10-14": 45, "15-70": 60 } },
 	"Winter Soldier": { 	role: "Duelist", 	mission2: { "1-4": 3700, "5-9": 7500, "10-14": 11000, "15-70": 15000 }, mission3: { "1-4": 4, "5-9": 8, "10-14": 12, "15-70": 17 } },
 	"Wolverine": {			role: "Duelist", 	mission2: { "1-4": 4400, "5-9": 8800, "10-14": 13000, "15-70": 18000 }, mission3: { "1-4": 5, "5-9": 10, "10-14": 15, "15-70": 20 } }
 };
@@ -261,6 +263,10 @@ function selectHero(hero){
 
 	const herologo = document.getElementById("herologo");
 	herologo.style.backgroundImage = `url('assets/logo/${heroToFile(hero.name)}.png')`;
+
+	mainInputs.style.display = "flex";
+	noHeroMessage.style.display = "none";
+	selectHeroText.style.display = "none";
 }
 // #endregion
 
@@ -293,11 +299,63 @@ function buildMissionInputs(hero){
 	<button class="calculate" onclick="simulate()">Calculate</button>
 	`;
 }
+document.addEventListener("input", (e) => {
+	if(e.target.id === "mission2" || e.target.id === "mission3"){
+		e.target.value = Math.floor(e.target.value);
+	}
+
+	if(e.target.classList.contains("input-error")){
+		e.target.classList.remove("input-error");
+	}
+});
+
+document.addEventListener("focusin", (e)=>{
+	if(e.target.classList.contains("input-error")){
+		e.target.classList.remove("input-error");
+	}
+});
 // #endregion
 
 // #region Simulation
+function validateInputs(){
+    let valid = true;
+
+    const inputs = [
+        currentLevelInput,
+        targetLevelInput,
+        document.getElementById("mission2"),
+        document.getElementById("mission3")
+    ];
+
+    inputs.forEach(input => {
+        if(!input || input.value === ""){
+            input.classList.add("input-error");
+            valid = false;
+        }
+    });
+
+    const warningId = "emptyFieldsWarning";
+    let warning = document.getElementById(warningId);
+    if(!valid){
+        if(!warning){
+            warning = document.createElement("div");
+            warning.id = warningId;
+            warning.style.color = "red";
+            warning.style.fontWeight = "bold";
+            warning.innerText = "Some fields are empty! Calculation will be incorrect!!!";
+            mainInputs.appendChild(warning);
+        }
+    } else if(warning){
+        warning.remove();
+    }
+
+    return true; 
+}
+
 function simulate(){
 	calcClicks++;
+
+	if(!validateInputs()) return;
 
 	if(calcClicks === 10){
 		useOldBadges = true;
@@ -306,6 +364,14 @@ function simulate(){
 		});
 		console.log("Easter egg unlocked");
 		showRetroPopup();
+	}
+	if(calcClicks === 66){
+		useOldBadges = true;
+		document.querySelectorAll(".rankpicker input").forEach(input=>{
+			input.dispatchEvent(new Event("input"));
+		});
+		console.log("Easter egg unlocked");
+		Order66();
 	}
 
 	if(!currentHero){ alert("Pick a hero first"); return; }
@@ -420,7 +486,37 @@ function showRetroPopup(){
 	setTimeout(()=>{
 		div.classList.remove("show");
 		setTimeout(()=>div.remove(), 300);
-	}, 1800);
+	}, 1200);
 }
 
+function Order66(src){
+	const div = document.createElement("div");
+	div.className = "retro-popup";
+	div.innerText = "Execute Order 66";
+
+	document.body.appendChild(div);
+
+	requestAnimationFrame(()=>div.classList.add("show"));
+
+	const audio = new Audio("assets/order66.mp3");
+	audio.play();
+	setTimeout(()=>{
+		div.classList.remove("show");
+		setTimeout(()=>div.remove(), 300);
+	}, 1200);
+}
+
+const mainInputs = document.getElementById("mainInputs");
+const readGuideText = document.getElementById("readGuideText");
+const selectHeroText = document.getElementById("selectHeroText");
+const noHeroMessage = document.getElementById("noHeroMessage");
+
+mainInputs.style.display = "none";
+
+readGuideText.onclick = () => {
+	document.getElementById("infoPanel").style.display = "flex";
+};
+selectHeroText.onclick = () => {
+	document.getElementById("modal").style.display = "flex";
+};
 // #endregion
