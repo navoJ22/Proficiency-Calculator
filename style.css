@@ -805,6 +805,11 @@ input[type="number"]::-webkit-outer-spin-button {
     text-align: center;
 }
 
+.abouthalf{
+	min-width: 50%;
+}
+
+
 /* #endregion */
 
 /* #region RESPONSIVE DESIGN*/
