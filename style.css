@@ -867,6 +867,30 @@ input[type="number"]::-webkit-outer-spin-button {
 .abouthalf{
 	min-width: 50%;
 }
+.aboutscreen > div {
+    display: flex;
+    flex-wrap: wrap; 
+    justify-content: space-between;
+    gap: 20px;
+    overflow-y: auto; 
+    max-height: 65%;
+}
+
+.abouthalf {
+    flex: 1 1 45%;
+    min-width: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.abouthalf img {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    object-fit: contain;
+}
 
 
 /* #endregion */
