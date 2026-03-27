@@ -171,6 +171,73 @@ img {
 
 /* #region INPUTS & FORM */
 
+
+.mode-toggle {
+	align-self: center;
+	margin-top: 8px;
+	font-size: 18px;
+	color: #fff;
+}
+
+.mode-toggle input {
+	margin-right: 8px;
+	cursor: pointer;
+}
+
+.mode-toggle span {
+	font-size: 18px;
+}
+
+.mode-toggle {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-top: -6px;
+	font-size: 14px;
+}
+
+.switch {
+	position: relative;
+	display: inline-block;
+	width: 50px;
+	height: 24px;
+}
+
+.switch input {
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+
+.slider-toggle {
+	position: absolute;
+	cursor: pointer;
+	inset: 0;
+	background-color: #ccc;
+	border-radius: 24px;
+	transition: 0.2s;
+}
+
+.slider-toggle:before {
+	content: "";
+	position: absolute;
+	height: 18px;
+	width: 18px;
+	left: 3px;
+	top: 3px;
+	background-color: white;
+	border-radius: 50%;
+	transition: 0.2s;
+}
+
+input:checked + .slider-toggle {
+	background-color: var(--rivals-yellow);
+}
+
+input:checked + .slider-toggle:before {
+	transform: translateX(26px);
+}
+
 #noHeroMessage{
 	display: flex;
 	justify-content: center;
@@ -670,19 +737,14 @@ input[type="number"]::-webkit-outer-spin-button {
 /* Slider*/
 #pointsSlider {
 	-webkit-appearance: none;
-	/* remove default styling */
 	height: 10px;
-	/* track height */
 	background: #737890;
-	/* default track color */
 	border-radius: 4px;
 	outline: none;
-	/* removing default appearance */
 	-webkit-appearance: none;
 	appearance: none;
 	/* creating a custom design */
 	width: 100%;
-	/*  slider progress trick  */
 	overflow: hidden;
 }
 
@@ -693,15 +755,12 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 #pointsSlider::-webkit-slider-thumb {
-	/* removing default appearance */
 	-webkit-appearance: none;
 	appearance: none;
-	/* creating a custom design */
 	height: 15px;
 	width: 15px;
 	background-color: #ffcd34;
 	border: 2px solid #ffcd34;
-	/*  slider progress trick  */
 	box-shadow: -600px 0 0 608px #ffcd34;
 }
 
@@ -829,7 +888,7 @@ input[type="number"]::-webkit-outer-spin-button {
     
     .app {
         flex-direction: column;
-        height: auto;
+        height: 100vh;
     }    
     
     .left {
@@ -839,13 +898,22 @@ input[type="number"]::-webkit-outer-spin-button {
     
     .right {
         width: 95%;
-        height: auto;
-        min-height: unset;
+        height: 65%;
         margin: 20px auto;
         margin-top: 0;
         border-radius: 32px;
     }    
-    
+	#heroImg {
+        height: 400px;
+		margin-block: 100px;
+
+    }    
+	.hero-icon {
+		height: 600px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
     .missioncal-holder {
         gap: 24px;
         display: flex;
@@ -858,12 +926,7 @@ input[type="number"]::-webkit-outer-spin-button {
         width: calc(100%);
     }    
         
-    .rightcontent {
-        height: 900px;
-    }    
-    
     .hero-box {
-        height: 700px;
         margin-top: -100px;
         margin-bottom: -100px;
     }
@@ -938,9 +1001,7 @@ input[type="number"]::-webkit-outer-spin-button {
         overflow-y: auto;
     }    
     
-    #heroImg {
-        height: 500px;
-    }    
+
     
     .hero-background {
         z-index: -50;
@@ -1311,5 +1372,35 @@ input[type="number"]::-webkit-outer-spin-button {
 		margin: auto;
 		margin-bottom: 0px;
 	}
+
+    .mode-toggle {
+        justify-content: center;
+        gap: 20px;
+        font-size: 32px;
+        margin-top: 20px;
+    }
+    .mode-toggle span{
+		font-size: 46px;
+	}
+    .switch {
+        width: 90px;
+        height: 44px;
+    }
+
+    .slider-toggle {
+        border-radius: 44px;
+    }
+
+    .slider-toggle:before {
+        width: 34px;
+        height: 34px;
+        top: 5px;
+        left: 5px;
+    }
+
+    input:checked + .slider-toggle:before {
+        transform: translateX(46px);
+    }
+
 }
 /* #endregion */

@@ -18,7 +18,7 @@ let useOldBadges = false;
 
 // #endregion
 
-// #region const
+// #region Const
 const RANK_TO_LEVEL = {
 	Agent: 4, Knight: 9, Captain: 14, Centurion: 19, Lord: 24, Count: 29,
 	Colonel: 34, Warrior: 39, Elite: 44, Guardian: 49, Champion: 70
@@ -43,6 +43,8 @@ const XP_PER_15_MIN = [
 	{ min: 1, max: 19, xp: 20 },
 	{ min: 20, max: 70, xp: 60 }
 ];
+
+const modeToggle = document.getElementById("modeToggle");
 // #endregion
 
 // #region Hero Data
@@ -149,8 +151,20 @@ function limitTarget(){
 
 
 function getXPForLevel(level){
-	for(const b of XP_PER_REPEAT) if(level>=b.min && level<=b.max) return b.xp;
-	return 0;
+	let xp = 0;
+
+	for(const b of XP_PER_REPEAT){
+		if(level >= b.min && level <= b.max){
+			xp = b.xp;
+			break;
+		}
+	}
+
+	if(modeToggle.checked && level >= 20){
+		xp = 60;
+	}
+
+	return xp;
 }
 
 function getXPFor15Min(level){
