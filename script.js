@@ -376,7 +376,7 @@ function simulate(){
 
 	const latticeEl = document.querySelector(".latticedisplay p");
 
-	if(!latticeEl) return; // safety
+	if(!latticeEl) return;
 
 	let current = parseInt(latticeEl.innerText) || 0;
 
