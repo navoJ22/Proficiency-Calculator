@@ -310,7 +310,10 @@ function buildMissionInputs(hero){
 			<label>${mission3Name} per 10 minutes</label>
 		</div>
 	</div>
-	<button class="calculate" onclick="simulate()">Calculate</button>
+	<button class="calculate" onclick="simulate()">Calculate
+		<img src="assets/badge/Lattice.png" alt="">
+		<p>100</p>
+	</button>
 	`;
 }
 document.addEventListener("input", (e) => {
@@ -367,6 +370,30 @@ function validateInputs(){
 }
 
 function simulate(){
+
+
+
+
+	const latticeEl = document.querySelector(".latticedisplay p");
+
+	if(!latticeEl) return; // safety
+
+	let current = parseInt(latticeEl.innerText) || 0;
+
+	current -= 100;
+
+	if(current == 0){
+		alert("April Fools!");
+	}
+
+	latticeEl.innerText = current;
+
+
+
+
+
+
+
 	calcClicks++;
 
 	if(!validateInputs()) return;
@@ -534,3 +561,4 @@ selectHeroText.onclick = () => {
 	document.getElementById("modal").style.display = "flex";
 };
 // #endregion
+

@@ -153,6 +153,30 @@ img {
 	padding: 0 20px;
 }
 
+.topbar > * {
+	width: 33%;
+}
+.latticedisplay{
+	display: flex;
+	flex-direction: row;
+}
+.latticedisplay > img{
+	height: 50px;
+}
+.calculate{
+	height: 100px !important;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
+.calculate > img{
+	height: 30px;
+}
+.calculate > p {
+	margin: 0;
+}
+
 .infobutton {
 	width: 50px;
 	height: 50px;
