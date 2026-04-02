@@ -311,8 +311,10 @@ function buildMissionInputs(hero){
 		</div>
 	</div>
 	<button class="calculate" onclick="simulate()">Calculate
+		<!--
 		<img src="assets/badge/Lattice.png" alt="">
 		<p>100</p>
+		-->
 	</button>
 	`;
 }
@@ -371,9 +373,7 @@ function validateInputs(){
 
 function simulate(){
 
-
-
-
+/*  Lattice
 	const latticeEl = document.querySelector(".latticedisplay p");
 
 	if(!latticeEl) return;
@@ -387,13 +387,7 @@ function simulate(){
 	}
 
 	latticeEl.innerText = current;
-
-
-
-
-
-
-
+ */
 	calcClicks++;
 
 	if(!validateInputs()) return;

@@ -153,6 +153,7 @@ img {
 	padding: 0 20px;
 }
 
+/* Lattice
 .topbar > * {
 	width: 33%;
 }
@@ -175,7 +176,7 @@ img {
 }
 .calculate > p {
 	margin: 0;
-}
+} */
 
 .infobutton {
 	width: 50px;
