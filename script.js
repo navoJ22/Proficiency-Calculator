@@ -56,7 +56,7 @@ function heroPickerImg(name){ return `assets/hero/${heroToFile(name)}.png`; }
 function heroDisplayImg(name){ return `assets/displayicon/${heroToFile(name)}.png`; }
 
 const heroNames = ["Adam Warlock","Angela","Black Cat", "Black Panther","Black Widow","Blade","Bruce Banner",
-	"Captain America","Cloak & Dagger","Daredevil","Doctor Strange", "Deadpool", "Elsa Bloodstone",
+	"Captain America","Cloak & Dagger","Daredevil","Deadpool","Devil Dino","Doctor Strange", "Elsa Bloodstone",
 	"Emma Frost","Gambit","Groot","Hawkeye","Hela","Human Torch",
 	"Invisible Woman","Iron Fist","Iron Man","Jeff",
 	"Loki","Luna Snow","Magik","Magneto","Mantis","Mister Fantastic",
@@ -87,6 +87,7 @@ const heroMissions = {
 	"Cloak & Dagger": { 	role: "Strategist", mission2: { "1-4": 5400, "5-9": 11000, "10-14": 16000, "15-70": 21000 }, mission3: { "1-4": 15, "5-9": 30, "10-14": 45, "15-70": 60 } },
 	"Daredevil": { 			role: "Duelist", 	mission2: { "1-4": 3700, "5-9": 7500, "10-14": 11000, "15-70": 15000 }, mission3: { "1-4": 5, "5-9": 10, "10-14": 15, "15-70": 20 } },
 	"Deadpool": { 			role: "Special", 	mission2: { "1-4": 5700, "5-9": 11000, "10-14": 17000, "15-70": 23000 }, mission3: { "1-4": 5, "5-9": 30, "10-14": 45, "15-70": 60 }, 	mission2Name: "Damage and Healing", mission3Name: "KOs & Assists" },
+	"Devil Dino": { 		role: "Vanguard", 	mission2: { "1-4": 14000, "5-9": 27000, "10-14": 41000, "15-70": 55000 }, mission3: { "1-4": 7, "5-9": 15, "10-14": 22, "15-70": 29 } },
 	"Doctor Strange": { 	role: "Vanguard", 	mission2: { "1-4": 10000, "5-9": 21000, "10-14": 31000, "15-70": 42000 }, mission3: { "1-4": 6, "5-9": 13, "10-14": 19, "15-70": 25 } },
 	"Elsa Bloodstone": { 	role: "Duelist", 	mission2: { "1-4": 5700, "5-9": 11000, "10-14": 17000, "15-70": 23000 }, mission3: { "1-4": 6, "5-9": 11, "10-14": 17, "15-70": 23 } },
 	"Emma Frost": { 		role: "Vanguard", 	mission2: { "1-4": 10000, "5-9": 21000, "10-14": 31000, "15-70": 42000 }, mission3: { "1-4": 7, "5-9": 15, "10-14": 22, "15-70": 29 } },
