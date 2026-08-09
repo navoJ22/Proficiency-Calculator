@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+
+	<title>Proficiency Calculator</title>
+
+	<meta name="description" content="Calculate how much time it will take to reach your targeted Proficiency level in Marvel Rivals.">
+	<meta name="keywords" content="Marvel Rivals, Proficiency Calculator, Marvel Rivals Proficiency, Proficiency, Hero Proficiency, Marvel Rivals Calculator">
+	<meta name="author" content="navoJ22">
+	<meta name="robots" content="index, follow">
+	<meta name="language" content="English">
+	<meta name="theme-color" content="#222134">
+
+	<link rel="canonical" href="https://navoj.proficiency-calculator.online/">
+
+	<link rel="icon" type="image/png" href="assets/favicon.png">
+	<link rel="apple-touch-icon" href="assets/favicon.png">
+
+	<meta property="og:title" content="Proficiency Calculator">
+	<meta property="og:description" content="Calculate how much time it will take to reach your targeted Proficiency level in Marvel Rivals.">
+	<meta property="og:image" content="https://navoj.proficiency-calculator.online/assets/showcases9.png">
+	<meta property="og:image:secure_url" content="https://navoj.proficiency-calculator.online/assets/showcases9.png">
+	<meta property="og:image:type" content="image/png">
+	<meta property="og:image:width" content="1280">
+	<meta property="og:image:height" content="720">
+	<meta property="og:image:alt" content="Marvel Rivals Proficiency Calculator">
+	<meta property="og:url" content="https://navoj.proficiency-calculator.online/">
+	<meta property="og:type" content="website">
+	<meta property="og:site_name" content="Proficiency Calculator">
+	<meta property="og:locale" content="en_US">
+
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:title" content="Proficiency Calculator">
+	<meta name="twitter:description" content="Calculate how much time it will take to reach your targeted Proficiency level in Marvel Rivals.">
+	<meta name="twitter:image" content="https://navoj.proficiency-calculator.online/assets/showcases9.png">
+	<meta name="twitter:image:alt" content="Marvel Rivals Proficiency Calculator">
+	<meta name="twitter:creator" content="@navoJ22">
+
+	<script type="application/ld+json">
+	{
+		"@context": "https://schema.org",
+		"@type": "WebApplication",
+		"name": "Proficiency Calculator",
+		"url": "https://navoj.proficiency-calculator.online/",
+		"description": "Calculate how much time it will take to reach your targeted Proficiency level in Marvel Rivals.",
+		"applicationCategory": "UtilitiesApplication",
+		"operatingSystem": "Any",
+		"browserRequirements": "Requires JavaScript",
+		"author": {
+			"@type": "Person",
+			"name": "navoJ22"
+		}
+	}
+	</script>
+
+	<link rel="stylesheet" href="style.css">
+</head>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L5SZ2L53YH"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L5SZ2L53YH');
+</script>
+<body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5HMZT4WB"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+	<div id="heroBg" class="hero-background"></div>
+
+	<div class="app">
+
+		<div class="header">
+			<img src="assets/topbar.png" alt="" class="headerbg">
+
+			<div class="headercontent">
+
+				<div class="headercontentleft">
+
+
+					<div class="homebutton" id="discordBot">
+						<img src="assets/discordpfp.png" alt="">
+						Bot
+					</div>
+
+
+					<div class="herobutton" onclick="goToHeroPicker()">
+						<div class="herobutton-animation"></div>
+						<p>Select Hero</p>
+					</div>
+
+					<div class="homebutton" id="about" style="text-align: center;">
+						About The<br>
+						Website
+					</div>
+
+
+
+				</div>
+
+				<h2 class="title">
+					<span class="letter yellowtext">P</span>
+					<span class="letter yellowtext">r</span>
+					<span class="letter yellowtext">o</span>
+					<span class="letter yellowtext">f</span>
+					<span class="letter yellowtext">i</span>
+					<span class="letter yellowtext">c</span>
+					<span class="letter yellowtext">i</span>
+					<span class="letter yellowtext">e</span>
+					<span class="letter yellowtext">n</span>
+					<span class="letter yellowtext">c</span>
+					<span class="letter yellowtext">y</span>
+					<span class="letter">C</span>
+					<span class="letter">a</span>
+					<span class="letter">l</span>
+					<span class="letter">c</span>
+					<span class="letter">u</span>
+					<span class="letter">l</span>
+					<span class="letter">a</span>
+					<span class="letter">t</span>
+					<span class="letter">o</span>
+					<span class="letter">r</span>
+				</h2>
+
+
+				<div class="headercontentright">
+
+
+					<!-- <div class="gift"></div> -->
+
+					<div class="settings"></div>
+
+					<img src="assets/spacer.png" alt="" class="spacer">
+
+					<div class="profile">
+						<img src="assets/profiledefault.png" class="profile-img" alt="">
+						<div class="lvlholder">
+							<img src="assets/lvlholder.png" alt="">
+							<p>100</p>
+						</div>
+					</div>
+
+				</div>
+
+
+
+
+
+			</div>
+
+		</div>
+
+
+
+		<!-- LEFT PANEL -->
+		<div class="left">
+			<div class="herotriangle">
+				<div id="herobgcolor"></div>
+				<div id="herologo"></div>
+			</div>
+
+
+
+			<div class="hero-box">
+				<div class="hero-icon">
+					<img id="heroImg" src="assets/displayicon/none.png" alt="">
+				</div>
+			</div>
+		</div>
+
+		<!-- RIGHT PANEL -->
+		<div class="right">
+			<div class="topbar">
+				<div class="hero-name" id="heroName">None</div>
+				<div class="infobutton"></div>
+
+				<!-- Lattice
+				<div class="latticedisplay">
+					<img src="assets/badge/LatticeBunch.png" alt="">
+					<p>10000</p>
+				</div> -->
+
+			</div>
+			<div class="rightcontent">
+				<div id="noHeroMessage" style="text-align:center; font-size:24px;">
+					<div id="selectHeroText">Select Hero</div>
+					<br><br>
+					<div id="readGuideText">How To Use</div>
+				</div>
+
+				<div class="rankinput reworked" id="mainInputs">
+
+					<div class="rank-top">
+						<div class="rankpicker">
+							<div class="input-field">
+								<input type="number" id="currentLevel" required spellcheck="false">
+								<label>Current Level</label>
+								<div class="rankdisplay">
+									<img src="" alt="" class="rankimage" style="display:none">
+								</div>
+							</div>
+						</div>
+						<img src="assets/arrow.png" class="arrowimg" alt="">
+						<div class="rankpicker">
+							<div class="input-field">
+								<input type="number" id="targetLevel" required spellcheck="false">
+								<label>Target Level</label>
+								<div class="rankdisplay">
+									<img src="" alt="" class="rankimage" style="display:none">
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="proficiency">
+
+						<div class="points-toggle-holder">
+
+
+							<div class="proficiency-text">
+								PROFICIENCY
+								<input type="number" id="pointsInput" min="0" value="0">
+								/ <span id="maxPoints">0</span>
+							</div>
+
+							<div class="mode-toggle">
+								<span>Normal</span>
+								<label class="switch">
+									<input type="checkbox" id="modeToggle">
+									<span class="slider-toggle"></span>
+								</label>
+								<span>Arcade</span>
+							</div>
+
+						</div>
+
+
+						<input type="range" id="pointsSlider" min="0" max="0" value="0">
+					</div>
+
+
+
+					<div id="dynamicInputs"></div>
+
+					<div class="results">
+						<div class="result1 result" id="result1"></div>
+						<div class="result2 result" id="result2"></div>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="infobar">
+				<h5 style="color: #222; text-align: center;">This website is not affiliated with, endorsed by, or
+					sponsored by NetEase or Marvel Rivals. All trademarks and game assets belong to their respective
+					owners.</h5>
+
+				<a class="discord" href="https://discord.gg/v2sA2DSyS5" target="_blank">
+				</a>
+				<div class="discord-invite" id="discordInvite" hidden>
+					<a href="https://discord.gg/v2sA2DSyS5" target="_blank" rel="noopener noreferrer">Join Discord</a>
+				</div>
+			</div>
+
+		</div>
+
+
+
+
+	</div>
+
+
+
+
+
+
+
+
+	<!-- HERO PICKER -->
+	<div class="modal" id="modal">
+		<div class="modal-content">
+			<button class="mobile-popup-close" type="button" aria-label="Close popup" data-close-panel="modal"></button>
+
+			<img src="assets/cornerbr.png" alt="" class="cornerpic cornerbr">
+			<img src="assets/cornertl.png" alt="" class="cornerpic cornertl">
+
+
+			<div class="modaltop">
+				<h3>Change Hero</h3>
+
+
+
+				<div class="search">
+					<input id="SearchInput" placeholder="Search">
+				</div>
+
+
+
+				<label class="strikesquad">
+					<input type="checkbox" id="strikeSquadOnly">
+					<span class="sscheckmark"></span>
+					Strike Squad
+				</label>
+
+				<label class="strikesquad">
+					<input type="checkbox" id="strikeSquadFirst">
+					<span class="sscheckmark"></span>
+					Strike Squad First
+				</label>
+
+
+
+				<div class="sort-filter">
+					<select id="heroSort" aria-label="Sort heroes">
+						<option value="name">A-Z</option>
+						<option value="level">Level</option>
+						<option value="role">Role</option>
+					</select>
+				</div>
+
+				<div class="role-filter">
+					<select id="roleFilter">
+						<option value="All">All Roles</option>
+						<option value="Vanguard">Vanguard</option>
+						<option value="Duelist">Duelist</option>
+						<option value="Strategist">Strategist</option>
+					</select>
+				</div>
+
+			</div>
+
+			<div class="hero-grid" id="heroGrid"></div>
+
+
+		</div>
+	</div>
+
+	<div class="info-panel" id="infoPanel">
+		<div class="infocontent">
+			<button class="mobile-popup-close" type="button" aria-label="Close popup"
+				data-close-panel="infoPanel"></button>
+			<div class="usage-image"></div>
+			<button id="playTutorial" class="yellowbutton usage-tutorial-button" type="button">Play Tutorial</button>
+		</div>
+	</div>
+
+
+
+	<div class="about-panel" id="aboutPanel">
+		<div class="aboutscreen">
+			<button class="mobile-popup-close" type="button" aria-label="Close popup"
+				data-close-panel="aboutPanel"></button>
+			<img src="assets/cornerbr.png" alt="" class="cornerpic cornerbr">
+			<img src="assets/cornertl.png" alt="" class="cornerpic cornertl">
+			<h1>About the Website</h1>
+			<div>
+				<p>This website was first created by navoJ22 in S5. Since then, it got several major updates,
+					especially in S6 and S9.
+					<br>Credit where credit is due: big thanks to
+					<br><span class="yellowtext">RynOfficial, StellerGuy, Azimaon, cruelshrimp, NightFoxAhri and
+						Demitri7</span>
+					<br>for helping update the website for the S6 patch.
+				</p>
+			</div>
+
+
+			<div>
+				<div class="horizontal" style="gap: 20px;">
+					<div class="abouthalf">
+						<div class="versionshowcase">
+							<h2><a href="https://navoj22.github.io/Lord-Calculator-S5/" target="_blank">S5 Version</a></h2>
+							<img src="assets/showcases5.png" alt="">
+						</div>
+					</div>
+
+					<div class="abouthalf">
+						<div class="versionshowcase">
+							<h2><a href="https://navoj22.github.io/Proficiency-Calculator-S6-S9/" target="_blank">S6-S9 Version</a></h2>
+							<img src="assets/showcases6-s9.png" alt="">
+						</div>
+					</div>
+
+					<div class="abouthalf">
+						<div class="versionshowcase">
+							<h2><a href="https://navoj22.github.io/Proficiency-Calculator/" target="_blank">S9.5+ GitHub</a></h2>
+							<img src="assets/showcases9.png" alt="">
+						</div>
+					</div>
+
+
+				</div>
+
+
+
+				<div class="aboutpagebottom">
+
+
+					<div class="abouthalf">
+						<h3>Change Log</h3>
+						<div class="changelog">
+							<p>- Hero Picker Redesign</p>
+							<p>- Local Storage</p>
+							<p>- Tracks levels and Strike Squad heroes</p>
+							<p>- Search bar and Strike Squad filters</p>
+							<p>- Save file import and export</p>
+							<p>- Discord Server</p>
+							<p>- Discord Bot</p>
+							<p>- Domain</p>
+						</div>
+					</div>
+
+
+					<div style="display: flex; flex-direction: column; gap: 0px;">
+						<P>Support me and this project 💙</P>
+						<script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
+							data-name="bmc-button" data-slug="navoJGames" data-color="#222134" data-emoji="☕"
+							data-font="Lato" data-text="Buy me a coffee" data-outline-color="#ffffff"
+							data-font-color="#ffffff" data-coffee-color="#FFDD00"></script>
+					</div>
+
+
+					<div class="abouthalf">
+						<h3>Code Contributors (submit in Discord)</h3>
+						<div class="changelog">
+							<p></p>
+						</div>
+					</div>
+
+				</div>
+				<div class="footer">
+					<a href="terms.html" target="_blank">Terms of Service</a>
+					<p> | </p>
+					<a href="policy.html" target="_blank">Privacy Policy</a>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+
+
+	<div class="settings-panel" id="settingsPanel">
+		<div class="settingsscreen">
+			<button class="mobile-popup-close" type="button" aria-label="Close popup"
+				data-close-panel="settingsPanel"></button>
+			<img src="assets/cornerbr.png" alt="" class="cornerpic cornerbr">
+			<img src="assets/cornertl.png" alt="" class="cornerpic cornertl">
+
+			<h1>Settings</h1>
+
+			<h2>Account</h2>
+
+
+			<div class="discord-account">
+
+				<img src="assets/discordpfp.png" class="profile-img discordpfp" alt="">
+
+
+				<div class="profile-info">
+					<div class="profile-name"></div>
+					<button id="discordAuthBtn" class="discord-btn yellowbutton">Log in with Discord</button>
+				</div>
+			</div>
+			<p class="loginwarning">Warning: <br><strong>Logging in with Discord will replace your current local save.
+				</strong><br>To keep this save, export it first. After logging in, import that file again.</p>
+
+			<h2>Save File</h2>
+
+			<div class="savefile">
+
+				<div class="import">
+					<img src="assets/savefileimport.png" alt="">
+
+					<button class="savefilebutton" id="savefileimport" style="position: relative; overflow: hidden;">
+						<div class="savefilebuttonyellowleft" bis_skin_checked="1"></div>
+						<div class="savefilebuttonyellowmiddle" bis_skin_checked="1">Import</div>
+						<div class="savefilebuttonyellowright" bis_skin_checked="1"></div>
+					</button>
+
+				</div>
+
+				<div class="export">
+					<img src="assets/savefileexport.png" alt="">
+
+					<button class="savefilebutton" id="savefileexport" style="position: relative; overflow: hidden;">
+						<div class="savefilebuttonyellowleft" bis_skin_checked="1"></div>
+						<div class="savefilebuttonyellowmiddle" bis_skin_checked="1">Export</div>
+						<div class="savefilebuttonyellowright" bis_skin_checked="1"></div>
+					</button>
+
+				</div>
+
+				<div class=" delete">
+					<img src="assets/savefiledelete.png" alt="">
+
+					<button class="savefilebutton" id="savefiledelete" style="position: relative; overflow: hidden;">
+						<div class="savefilebuttonyellowleft" bis_skin_checked="1"></div>
+						<div class="savefilebuttonyellowmiddle" bis_skin_checked="1">Delete</div>
+						<div class="savefilebuttonyellowright" bis_skin_checked="1"></div>
+					</button>
+				</div>
+
+			</div>
+
+		</div>
+	</div>
+
+	<div class="gift-panel" id="giftPanel">
+		<div class="giftscreen">
+			<button class="mobile-popup-close" type="button" aria-label="Close popup"
+				data-close-panel="giftPanel"></button>
+			<img src="assets/cornerbr.png" alt="" class="cornerpic cornerbr">
+			<img src="assets/cornertl.png" alt="" class="cornerpic cornertl">
+		</div>
+	</div>
+
+	<div class="discordbot-panel" id="discordBotPanel">
+		<div class="discordbotscreen">
+			<button class="mobile-popup-close" type="button" aria-label="Close popup"
+				data-close-panel="discordBotPanel"></button>
+			<img src="assets/cornerbr.png" alt="" class="cornerpic cornerbr">
+			<img src="assets/cornertl.png" alt="" class="cornerpic cornertl">
+
+			<h1>Proficiency Calculator is available on Discord!</h1>
+
+			<div style="display: flex; flex-direction: row;">
+
+
+				<div class="discordcontainer">
+					<img src="assets/bot1.png" alt="" class="botimg1">
+					<div class="subcontainer">
+
+						<h3>Usage</h3>
+						<p>
+							Use <code>/proficiency-calculator hero:{hero name}</code> and enter the same information as
+							on the website.
+							<span class="italic graytext">(Current Level, Target Level, Stats per 10 minutes, and
+								more)</span>
+						</p>
+
+						<p>
+							The bot works in <span class="yellowtext">servers</span>, <span
+								class="yellowtext">DMs</span>, and <span class="yellowtext">group chats</span>. You can
+							add it to a <span class="yellowtext">server</span> or install it to <span
+								class="yellowtext">your apps</span> to use it anywhere.
+						</p>
+
+						<p>
+							<i>
+								Note: Servers that disable "Use External Apps" permission prevent the bot from
+								displaying results to everyone, but results will still be visible to you.
+							</i>
+						</p>
+						<div class="subcontainer">
+							<h3>Cross Progression</h3>
+							<p>Log in with Discord to share progress between the website and the bot.</p>
+							<p>The website and bot will prefill fields like Current Level, Target Level, and missions.
+							</p>
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+
+
+			<div class="discordcontainer">
+
+			</div>
+
+
+
+			<a style="font-size: 18px;" class="yellowbutton" id="addtodiscord"
+				href="https://discord.com/oauth2/authorize?client_id=1530302918039703664" target="_blank"
+				rel="noopener noreferrer">
+				Add to Discord
+			</a>
+
+
+
+		</div>
+
+
+
+
+
+	</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<img id="cursorImg" draggable="false">
+	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+	<script src="script.js"></script>
+</body>
+
+
+</html>

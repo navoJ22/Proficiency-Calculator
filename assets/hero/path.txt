@@ -1,0 +1,1 @@
+Marvel\Content\Marvel\UI\Textures\HeroPortrait\SelectHero
