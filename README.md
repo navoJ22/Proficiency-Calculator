@@ -23,6 +23,8 @@ A fan-made **Marvel Rivals Proficiency Calculator** that helps you calculate XP 
 
 Proficiency Calculator is also available as a Discord bot.
 
+[Add Proficiency Calculator to your server](https://discord.com/oauth2/authorize?client_id=1530302918039703664)
+
 You can use the calculator directly in Discord with:
 
 `/proficiency-calculator hero:{hero name}`
