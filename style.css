@@ -914,14 +914,6 @@ input[type="number"]::-webkit-outer-spin-button {
     width: 100%;
 }
 
-.aboutscreen>div {
-	display: flex;
-    flex-direction: column;
-	align-items: center;
-}
-
-
-
 .abouthalf {
     min-width: 250px;
     display: flex;
@@ -929,11 +921,58 @@ input[type="number"]::-webkit-outer-spin-button {
     align-items: center;
 	justify-content: space-around;
 }
+
+.about-intro {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	max-width: 920px;
+	margin: 0 auto 12px;
+}
+
+.about-content {
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+}
+
+.about-showcases {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: stretch;
+}
+
+.aboutpagebottom {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: stretch;
+	gap: 20px;
+}
+
+.about-support {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	min-width: 250px;
+	padding: 12px 0;
+}
+
+.about-support > p {
+	margin: 0;
+	font-size: 18px;
+	text-align: center;
+}
+
 .footer{
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	gap: 8px;
+	justify-content: center;
 }
 
 .changelog{
@@ -983,14 +1022,6 @@ input[type="number"]::-webkit-outer-spin-button {
 	border-radius: 16px;
 	border: 1px solid white;
 }
-
-.aboutscreen > div {
-    display: flex;
-    flex-wrap: wrap; 
-    justify-content: space-between;
-}
-
-
 
 .abouthalf img {
     width: 100%;
@@ -1432,18 +1463,20 @@ input[type="number"]::-webkit-outer-spin-button {
         font-size: 32px;
     }   
 
-    .aboutscreen>div {
-        display: flex;
-        flex-direction: column;
-    }    
-    
     .aboutscreen img {
         width: 100%;
     }
-	.aboutscreen>div{
-		overflow-y: scroll;
+	.about-content{
+		width: 100%;
+	}
+	.about-showcases,
+	.aboutpagebottom{
+		flex-direction: column;
 	}
 	.abouthalf{
+		width: 100%;
+	}
+	.about-support{
 		width: 100%;
 	}
 	.abouthalf > div{
@@ -2544,10 +2577,6 @@ button.yellowbutton{
 		text-align: center;
 	}
 
-	.headercontentleft .homebutton:first-child {
-		display: none;
-	}
-
 	.homebutton > img {
 		height: 22px;
 		width: 22px;
@@ -3026,7 +3055,8 @@ button.yellowbutton{
 		bottom: 20px;
 	}
 
-	.aboutscreen > div,
+	.about-showcases,
+	.aboutpagebottom,
 	.discordcontainer,
 	.savefile,
 	.creditsthanks {
@@ -3055,14 +3085,9 @@ button.yellowbutton{
 		text-align: center;
 	}
 
-	.aboutscreen > div {
-		max-height: none;
-		justify-content: flex-start;
-	}
-
-	.aboutscreen .horizontal {
-		flex-direction: column;
-		gap: 14px !important;
+	.about-intro,
+	.about-content {
+		width: 100%;
 	}
 
 	.versionshowcase {
@@ -3099,6 +3124,16 @@ button.yellowbutton{
 		box-sizing: border-box;
 		background: transparent;
 		border-top: 1px solid rgba(255, 255, 255, 0.14);
+	}
+
+	.about-support {
+		align-items: center;
+		padding: 8px 0;
+	}
+
+	.about-support > p {
+		font-size: 15px;
+		text-align: center;
 	}
 
 	.aboutpagebottom p {
