@@ -227,6 +227,20 @@ img {
 	margin: 0;
 } */
 
+
+.changecostume{
+	cursor: pointer;
+	width: 45px;
+	height: 45px;
+	background-color: transparent;
+	border: none;
+	background-image: url(assets/changecostumehover.png);
+	background-size: cover;
+}
+.changecostume:hover {
+	background-image: url(assets/changecostume.png);
+}
+
 .infobutton {
 	width: 45px;
 	height: 45px;
@@ -593,7 +607,6 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .hero-name {
-	margin-top: 10px;
 	font-weight: bold;
 	font-size: 28px;
 }
@@ -666,6 +679,159 @@ input[type="number"]::-webkit-outer-spin-button {
 	font-size: 30px;
 	text-align: start;
 	z-index: 5;
+}
+
+.costume-modal {
+	background:
+		linear-gradient(rgba(10, 14, 22, 0.78), rgba(10, 14, 22, 0.78)),
+		url("assets/background.png") center/cover no-repeat;
+}
+
+.costume-modal-content {
+	background:
+		linear-gradient(135deg, rgba(240, 243, 255, 0.97), rgba(219, 225, 245, 0.95)),
+		url("assets/img_heroshow_randomcard_bg.png") center/cover no-repeat;
+	border: none;
+	border-radius: 0;
+	width: min(100%, 1920px);
+	max-width: 100%;
+	max-height: 100%;
+	box-sizing: border-box;
+}
+
+.costume-modal-shell {
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.costume-modal-title {
+	font-family: "Saira Condensed", Arial, sans-serif;
+	font-size: 32px;
+	font-weight: 800;
+	font-style: italic;
+	letter-spacing: 1px;
+	color: #1d2234;
+	text-align: center;
+	margin-top: 6px;
+}
+
+.costume-modal-divider {
+	width: 1200px;
+	height: 8px;
+	margin: 12px 400px;
+	border-bottom: var(--rivals-gray) solid 1px;
+}
+
+.costume-modal-panel {
+	width: min(100%, 940px);
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	background: rgba(198, 205, 231, 0.84);
+	box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.4);
+}
+
+.costume-modal-toolbar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 20px;
+	min-height: 76px;
+	padding: 0 18px 0 26px;
+	background: rgba(126, 135, 175, 0.72);
+	color: #ffffff;
+}
+
+.costume-modal-count {
+	flex: 1;
+	font-size: clamp(22px, 1.8vw, 32px);
+	font-weight: 400;
+	text-align: center;
+}
+
+.costume-select-all {
+	display: inline-flex;
+	align-items: center;
+	gap: 12px;
+	font-size: clamp(20px, 1.5vw, 28px);
+	color: #ffffff;
+}
+
+.costume-select-all input {
+	position: absolute;
+	opacity: 0;
+	pointer-events: none;
+}
+
+.costume-select-all-box {
+	background-image: url(assets/sscheckbox.png);
+	background-size: cover;
+	position: relative;
+	width: 25px;
+	height: 25px;
+}
+
+.costume-select-all input:checked + .costume-select-all-box::after {
+	content: "";
+	background-image: url(assets/sscheckmark.png);
+	background-size: cover;
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 25px;
+	height: 25px;
+}
+
+.costume-grid {
+	display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+	align-content: start;
+	gap: 12px;
+	padding: 16px 8px 18px 8px;
+	overflow-y: auto;
+}
+
+.costume-card {
+	position: relative;
+	width: 120px;
+	height: 180px;
+	background: transparent;
+	border: none;
+	overflow: hidden;
+	padding: 0;
+	cursor: pointer;
+}
+
+
+.costume-card > img {
+	background-image: url(assets/herobg.png);
+	background-size: cover;
+	max-width: 120px;
+	height: 180px;
+    object-fit: cover;
+}
+
+.costume-card-check{
+	background-image: url(assets/sscheckbox.png);
+	background-size: cover;
+	position: absolute;
+	right: 3px;
+	top: 3px;
+	width: 25px;
+	height: 25px;
+}
+
+.selected > .costume-card-check > .check-selected{
+	
+	background-image: url(assets/sscheckmark.png);
+	background-size: cover;
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 25px;
+	height: 25px;
 }
 
 /* #endregion */
@@ -3027,6 +3193,41 @@ button.yellowbutton{
 		gap: 8px;
 		max-height: none;
 		overflow: visible;
+	}
+
+	.costume-modal-content {
+		padding: 14px 14px 18px;
+	}
+
+	.costume-modal-title {
+		margin-top: 34px;
+		font-size: 30px;
+		line-height: 0.95;
+	}
+
+	.costume-modal-panel {
+		width: 100%;
+	}
+
+	.costume-modal-toolbar {
+		flex-direction: column;
+		align-items: stretch;
+		justify-content: center;
+		gap: 10px;
+		padding: 12px;
+	}
+
+	.costume-modal-count,
+	.costume-select-all {
+		font-size: 18px;
+		text-align: center;
+		justify-content: center;
+	}
+
+	.costume-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+		justify-content: center;
+		padding: 12px;
 	}
 
 	.herocard {

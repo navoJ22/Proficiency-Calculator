@@ -175,6 +175,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 		<!-- RIGHT PANEL -->
 		<div class="right">
 			<div class="topbar">
+				<button class="changecostume" type="button" aria-label="Edit random costume rotation"></button>
 				<div class="hero-name" id="heroName">None</div>
 				<div class="infobutton"></div>
 
@@ -336,6 +337,32 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 			<div class="hero-grid" id="heroGrid"></div>
 
 
+		</div>
+	</div>
+
+	<div class="modal costume-modal" id="costumeModal">
+		<div class="modal-content costume-modal-content">
+			<button class="mobile-popup-close" type="button" aria-label="Close popup" data-close-panel="costumeModal"></button>
+
+			<div class="costume-modal-shell">
+				<div class="costume-modal-title">Edit Skin Preview</div>
+				<div class="costume-modal-divider"></div>
+
+				<div class="costume-modal-panel">
+					<div class="costume-modal-toolbar">
+						<div class="costume-modal-count" id="costumeCount">Added to Random Equip List: 0/0</div>
+
+						<label class="costume-select-all">
+							<input type="checkbox" id="costumeSelectAll">
+							<span class="costume-select-all-box"></span>
+							<span>Select All</span>
+						</label>
+					</div>
+
+					<div class="costume-grid" id="costumeGrid">
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 

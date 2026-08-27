@@ -3,7 +3,9 @@
 const heroImg = document.getElementById("heroImg");
 const heroName = document.getElementById("heroName");
 const modal = document.getElementById("modal");
+const costumeModal = document.getElementById("costumeModal");
 const heroGrid = document.getElementById("heroGrid");
+const costumeGrid = document.getElementById("costumeGrid");
 const result1 = document.getElementById("result1");
 const result2 = document.getElementById("result2");
 const rightPanel = document.querySelector(".right");
@@ -56,6 +58,8 @@ const XP_PER_15_MIN = [
 const modeToggle = document.getElementById("modeToggle");
 const pointsInput = document.getElementById("pointsInput");
 const maxPointsText = document.getElementById("maxPoints");
+const costumeCount = document.getElementById("costumeCount");
+const costumeSelectAll = document.getElementById("costumeSelectAll");
 // #endregion
 
 // #region Hero Data
@@ -63,6 +67,7 @@ const maxPointsText = document.getElementById("maxPoints");
 function heroToFile(name){ return name.toLowerCase().replace(/[^a-z]/g,""); }
 function heroPickerImg(name){ return `assets/heropicker/${heroToFile(name)}.png`; }
 function heroDisplayImg(name){ return `assets/displayicon/${heroToFile(name)}.png`; }
+function heroPickerSkinImg(name, skinId){ return `assets/heropicker-skins/${heroToFile(name)}${skinId}.png`; }
 
 const heroNames = ["Adam Warlock","Angela","Black Cat", "Black Panther","Black Widow","Blade","Bruce Banner",
 	"Captain America","Cloak & Dagger", "Cyclops","Daredevil","Deadpool","Devil Dino","Doctor Strange", "Elsa Bloodstone",
@@ -76,6 +81,62 @@ const heroNames = ["Adam Warlock","Angela","Black Cat", "Black Panther","Black W
 
 const heroes = heroNames.map(name => ({ name, pickerImg: heroPickerImg(name), displayImg: heroDisplayImg(name) }));
 const heroNameLookup = new Map(heroNames.map(name => [heroToFile(name), name]));
+const HERO_COSTUME_STATE_KEY = "heroCostumeRotationState";
+const heroCostumeRolls = {};
+const HERO_SKIN_MANIFEST = {
+	adamwarlock: ["100","101","102","300","301","302","303","500","501","800"],
+	angela: ["100","101","300","500","501","502"],
+	blackcat: ["100","101","300","301","302","500"],
+	blackpanther: ["100","101","300","301","302","500","501","502"],
+	blackwidow: ["100","300","500","501","502","503","504","505","506","800"],
+	blade: ["100","101","102","300","301","302","500","800"],
+	brucebanner: ["100","300","500","501","502","800","801"],
+	captainamerica: ["100","102","300","301","302","303","500","501","502","503","504","505","801"],
+	cloakdagger: ["100","300","301","302","303","304","305","306","307","308","309","500","501"],
+	cyclops: ["100","101","500"],
+	daredevil: ["100","101","102","103","104","300","500","501","502","800"],
+	deadpool: ["100","101","102","103","104","105","106","107","108","109","110","111","112","113","300","301","302","500","501","502","800"],
+	devildino: ["100","101","300","301","500","501"],
+	doctorstrange: ["100","101","300","301","302","303","304","305","307","308","500","501","800"],
+	elsabloodstone: ["100","101","102","300","301","302","500","501","502","503"],
+	emmafrost: ["100","101","102","300","301","302","304","305","306","500","501","502"],
+	gambit: ["100","101","102","300","302","303","304","500"],
+	groot: ["100","301","302","303","304","500","501","502","800"],
+	hawkeye: ["100","101","102","300","301","302","303","304","500","501","502"],
+	hela: ["100","101","301","302","303","304","305","306","307","308","309","310","500","501","502","800"],
+	humantorch: ["100","101","102","300","500","501","502","504","800"],
+	invisiblewoman: ["100","101","103","300","301","302","303","304","305","306","307","308","309","310","311","312","500","501","502","504","505","506","507","800"],
+	ironfist: ["100","101","300","301","302","303","304","305","306","308","309","310","500","501","502"],
+	ironman: ["100","300","301","302","500","501","502","503","504","505","800","801"],
+	jeff: ["100","300","301","302","303","304","305","306","307","308","309","310","311","312","313","500","501","502","505","800"],
+	jubilee: ["100","101","500"],
+	loki: ["100","101","300","301","302","303","500","501","502","503","504","505","506","800","801","802"],
+	lunasnow: ["100","300","301","302","303","304","305","306","307","308","309","310","311","312","313","314","315","316","317","318"],
+	magik: ["100","101","300","301","302","303","304","305","306","307","500","501","502","503","505","506"],
+	magneto: ["100","101","102","300","301","302","303","500","501","502","503"],
+	mantis: ["100","101","102","300","301","302","303","304","305","306","307","500","501","800"],
+	misterfantastic: ["100","101","102","300","301","302","303","500","501","800"],
+	moonknight: ["100","101","300","301","500","501","502","503","800","801"],
+	namor: ["100","101","300","301","302","500","501","502","503","800"],
+	peniparker: ["100","101","300","301","302","303","304","305","306","308","309","500","501","502"],
+	phoenix: ["100","101","102","300","301","500","502","503"],
+	psylocke: ["100","300","301","302","303","304","305","306","307","308","309","311","312","313","314","500","501","502","503","504","505","506"],
+	rocketraccoon: ["100","101","300","301","302","303","304","305","306","307","308","500","801"],
+	rogue: ["100","101","102","300","301","500","501","502","503"],
+	scarletwitch: ["100","101","102","300","301","302","303","304","305","306","500","501","502","800","801","803"],
+	spiderman: ["100","101","102","300","301","500","501","502","503","504","505","508","509","510","800","801","802"],
+	squirrelgirl: ["100","300","301","302","303","304","305","306","500","501"],
+	starlord: ["100","102","103","300","301","302","303","500","501","502","800"],
+	storm: ["100","101","300","500","501","502","503","504"],
+	thepunisher: ["100","300","301","302","500","501","502","503","504","505","800"],
+	thething: ["100","101","102","300","301","302","500","501","502","504","505","800"],
+	thor: ["100","300","301","302","303","500","501","502","503","504","505","506","507","508","800"],
+	ultron: ["100","101","102","300","302","500","502","503","504","800"],
+	venom: ["100","101","102","103","300","301","302","303","304","305","500","501","502","503","800"],
+	whitefox: ["100","101","300","301","500","501"],
+	wintersoldier: ["100","102","103","300","301","302","304","500","501","502","503","800","802"],
+	wolverine: ["100","101","300","301","302","500","501","502","503","504","800"]
+};
 
 function normalizeStrikeSquad(value){
 	if(!Array.isArray(value)) return [];
@@ -89,6 +150,156 @@ function normalizeStrikeSquad(value){
 
 let currentHero = null;
 const LAST_SELECTED_HERO_KEY = "lastSelectedHero";
+
+function getHeroCostumeOptions(hero){
+	if(!hero) return [];
+	const heroName = typeof hero === "string" ? hero : hero.name;
+	const heroFile = heroToFile(heroName);
+	const role = heroMissions[heroName]?.role || "Special";
+	const extraSkins = HERO_SKIN_MANIFEST[heroFile] || [];
+
+	return [
+		{
+			id: "default",
+			name: "DEFAULT",
+			image: heroPickerImg(heroName),
+			role
+		},
+		...extraSkins.map(skinId => ({
+			id: skinId,
+			name: `SKIN ${skinId}`,
+			image: `assets/heropicker-skins/${heroFile}${skinId}.png`,
+			role
+		}))
+	];
+}
+
+function getAllCostumeSelections(){
+	return JSON.parse(localStorage.getItem(HERO_COSTUME_STATE_KEY) || "{}");
+}
+
+function getHeroCostumeSelections(hero){
+	if(!hero) return [];
+	const heroName = typeof hero === "string" ? hero : hero.name;
+	const validOptionIds = new Set(getHeroCostumeOptions(heroName).map(option => option.id));
+	const state = getAllCostumeSelections();
+	const selectedIds = Array.isArray(state[heroName]) ? state[heroName] : [];
+	return [...new Set(selectedIds.filter(id => validOptionIds.has(String(id))))];
+}
+
+function saveHeroCostumeSelections(hero, selectedIds){
+	if(!hero) return;
+	const heroName = typeof hero === "string" ? hero : hero.name;
+	const validOptionIds = new Set(getHeroCostumeOptions(heroName).map(option => option.id));
+	const state = getAllCostumeSelections();
+	state[heroName] = [...new Set(selectedIds.filter(id => validOptionIds.has(String(id))))];
+	localStorage.setItem(HERO_COSTUME_STATE_KEY, JSON.stringify(state));
+}
+
+function getHeroEffectiveSkinPool(hero){
+	const selectedIds = getHeroCostumeSelections(hero);
+	return selectedIds.length ? selectedIds : ["default"];
+}
+
+function pickRandomValue(values){
+	return values[Math.floor(Math.random() * values.length)];
+}
+
+function getHeroActiveSkinId(hero, forceRefresh = false){
+	if(!hero) return "default";
+
+	const heroName = typeof hero === "string" ? hero : hero.name;
+	const pool = getHeroEffectiveSkinPool(heroName);
+	const currentRoll = heroCostumeRolls[heroName];
+
+	if(!forceRefresh && pool.includes(currentRoll)){
+		return currentRoll;
+	}
+
+	const nextRoll = pool.length === 1 ? pool[0] : pickRandomValue(pool);
+	heroCostumeRolls[heroName] = nextRoll;
+	return nextRoll;
+}
+
+function getHeroPickerSkinImage(hero, skinId){
+	const heroName = typeof hero === "string" ? hero : hero.name;
+	return skinId === "default"
+		? heroPickerImg(heroName)
+		: heroPickerSkinImg(heroName, skinId);
+}
+
+function getHeroActivePickerImg(hero){
+	return getHeroPickerSkinImage(hero, getHeroActiveSkinId(hero));
+}
+
+function refreshCurrentHeroSkin(){
+	if(!currentHero) return;
+	heroImg.src = heroDisplayImg(currentHero.name);
+}
+
+function updateCostumeSummary(){
+	if(!costumeCount){
+		return;
+	}
+
+	if(!currentHero){
+		costumeCount.textContent = "Added to Random Equip List: 0/0";
+		if(costumeSelectAll) costumeSelectAll.checked = false;
+		return;
+	}
+
+	const options = getHeroCostumeOptions(currentHero);
+	const selected = getHeroCostumeSelections(currentHero);
+	costumeCount.textContent = `Added to Random Equip List: ${selected.length}/${options.length}`;
+
+	if(costumeSelectAll){
+		costumeSelectAll.checked = options.length > 0 && selected.length === options.length;
+	}
+}
+
+function renderCostumeCards(){
+	if(!costumeGrid) return;
+	costumeGrid.innerHTML = "";
+
+	if(!currentHero){
+		costumeGrid.innerHTML = '<div class="costume-card-empty">?</div>';
+		updateCostumeSummary();
+		return;
+	}
+
+	const options = getHeroCostumeOptions(currentHero);
+	const selectedIds = new Set(getHeroCostumeSelections(currentHero));
+
+	options.forEach(option => {
+		const card = document.createElement("button");
+		card.type = "button";
+		card.className = `costume-card${selectedIds.has(option.id) ? " selected" : ""}`;
+		card.innerHTML = `
+			<div class="costume-card-check" aria-hidden="true"><div class="check-selected"></div></div>
+			<img src="${option.image}" class="" alt="${currentHero.name} ${option.name}">
+		`;
+
+		card.addEventListener("click", () => {
+			const nextSelectedIds = new Set(getHeroCostumeSelections(currentHero));
+			if(nextSelectedIds.has(option.id)){
+				nextSelectedIds.delete(option.id);
+			}else{
+				nextSelectedIds.add(option.id);
+			}
+
+			saveHeroCostumeSelections(currentHero, [...nextSelectedIds]);
+			getHeroActiveSkinId(currentHero.name, true);
+			refreshCurrentHeroSkin();
+			renderHeroes(roleFilter.value, searchInput.value);
+			queueSupabaseSync();
+			renderCostumeCards();
+		});
+
+		costumeGrid.appendChild(card);
+	});
+
+	updateCostumeSummary();
+}
 
 const roleMissionNames = {
 	Vanguard: ["Damage Blocked", "KOs"],
@@ -436,7 +647,7 @@ function renderHeroes(filter = "All", search = "") {
 
 		card.innerHTML = `
 			<div class="herocard-bg">
-				<img src="${hero.pickerImg}" class="herocard-img">
+				<img src="${getHeroActivePickerImg(hero.name)}" class="herocard-img">
 
 				<div class="herocard-holder">
 					<div class="herocard-info">
@@ -501,8 +712,9 @@ function selectHero(hero){
 	currentHero=hero;
 	localStorage.setItem(LAST_SELECTED_HERO_KEY, hero.name);
 	heroName.innerText=hero.name;
-	heroImg.src=hero.displayImg;
+	heroImg.src=heroDisplayImg(hero.name);
 	modal.style.display="none";
+	renderCostumeCards();
 	buildMissionInputs(hero);
 	loadHeroInputs();
 
@@ -975,6 +1187,22 @@ setupPanel(".infobutton", "infoPanel");
 setupPanel("#about", "aboutPanel");
 setupPanel(".settings", "settingsPanel");
 setupPanel("#discordBot", "discordBotPanel");
+setupPanel(".changecostume", "costumeModal");
+
+costumeSelectAll?.addEventListener("change", () => {
+	if(!currentHero) return;
+
+	const options = getHeroCostumeOptions(currentHero);
+	saveHeroCostumeSelections(
+		currentHero,
+		costumeSelectAll.checked ? options.map(option => option.id) : []
+	);
+	getHeroActiveSkinId(currentHero.name, true);
+	refreshCurrentHeroSkin();
+	renderHeroes(roleFilter.value, searchInput.value);
+	queueSupabaseSync();
+	renderCostumeCards();
+});
 
 
 
@@ -1130,6 +1358,7 @@ const selectHeroText = document.getElementById("selectHeroText");
 const noHeroMessage = document.getElementById("noHeroMessage");
 
 mainInputs.style.display = "none";
+renderCostumeCards();
 
 readGuideText.onclick = () => {
 	document.getElementById("infoPanel").style.display = "flex";
@@ -1472,6 +1701,7 @@ async function handleUserLogin(user) {
 		renderHeroes(roleFilter.value, searchInput.value);
 
 		if(currentHero){
+			refreshCurrentHeroSkin();
 			loadHeroInputs();
 		}
 
@@ -1598,6 +1828,7 @@ function buildSupabaseDataFromLocalStorage() {
 	heroData.strikeSquad = normalizeStrikeSquad(JSON.parse(
 		localStorage.getItem("strikeSquad") || "[]"
 	));
+	heroData.heroCostumes = getAllCostumeSelections();
     return heroData;
 }
 
@@ -1608,6 +1839,10 @@ function syncSupabaseToLocalStorage(dbData) {
         strikeSquad = normalizeStrikeSquad(dbData.strikeSquad);
         localStorage.setItem("strikeSquad", JSON.stringify(strikeSquad));
     }
+
+	if(dbData.heroCostumes && typeof dbData.heroCostumes === "object"){
+		localStorage.setItem(HERO_COSTUME_STATE_KEY, JSON.stringify(dbData.heroCostumes));
+	}
 
     if (!dbData.heroes) return;
 
