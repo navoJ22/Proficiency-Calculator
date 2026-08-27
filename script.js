@@ -898,7 +898,6 @@ function saveHeroInputs(){
 	const modeData = {
 		currentLevel: currentLevelInput.value,
 		targetLevel: targetLevelInput.value,
-		points: pointsSlider.value,
 		mission2: document.getElementById("mission2")?.value || "",
 		mission3: document.getElementById("mission3")?.value || "",
 		missionKO: document.getElementById("missionKO")?.value || "",
@@ -926,8 +925,9 @@ function loadHeroInputs(){
 
 	updateProficiencyUI();
 
-	pointsSlider.value = modeData.points ?? commonData.points ?? 0;
-	pointsInput.value = modeData.points ?? commonData.points ?? 0;
+	const sharedPoints = commonData.points ?? modeData.points ?? 0;
+	pointsSlider.value = sharedPoints;
+	pointsInput.value = sharedPoints;
 
 
 	currentLevelInput.dispatchEvent(new Event("input"));
@@ -1810,7 +1810,6 @@ function buildSupabaseDataFromLocalStorage() {
 					...(heroData.heroes[heroName].modes[dbMode] || {}),
 					currentLevel: Number(parsed.currentLevel) || 0,
 					targetLevel: Number(parsed.targetLevel) || 0,
-					points: Number(parsed.points) || 0,
 					mission2: Number(parsed.mission2) || 0,
 					mission3: Number(parsed.mission3) || 0,
 					mission4: Number(parsed.mission4) || 0,
@@ -1867,7 +1866,6 @@ function syncSupabaseToLocalStorage(dbData) {
 				const modeData = {
 					currentLevel: modeValues.currentLevel ?? data.currentLevel ?? "",
 					targetLevel: modeValues.targetLevel ?? data.targetLevel ?? "",
-					points: modeValues.points ?? data.points ?? 0,
 					mission2: modeValues.mission2 || "",
 					mission3: modeValues.mission3 || "",
 					mission4: modeValues.mission4 || "",
