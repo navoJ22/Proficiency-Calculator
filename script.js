@@ -57,6 +57,7 @@ const XP_PER_15_MIN = [
 
 const modeToggle = document.getElementById("modeToggle");
 const pointsInput = document.getElementById("pointsInput");
+let isLoadingHeroInputs = false;
 const maxPointsText = document.getElementById("maxPoints");
 const costumeCount = document.getElementById("costumeCount");
 const costumeSelectAll = document.getElementById("costumeSelectAll");
@@ -914,57 +915,59 @@ function saveHeroInputs(){
 function loadHeroInputs(){
 	if(!currentHero) return;
 
+	isLoadingHeroInputs = true;
 
-	const commonData = JSON.parse(localStorage.getItem(getHeroCommonKey(currentHero.name)) || "{}");
-	const modeData = getSavedHeroModeData(currentHero.name);
-	const sharedCurrentLevel = commonData.currentLevel ?? modeData.currentLevel ?? "";
-	const sharedTargetLevel = commonData.targetLevel ?? modeData.targetLevel ?? "";
+	try{
+		const commonData = JSON.parse(localStorage.getItem(getHeroCommonKey(currentHero.name)) || "{}");
+		const modeData = getSavedHeroModeData(currentHero.name);
+		const sharedCurrentLevel = commonData.currentLevel ?? modeData.currentLevel ?? "";
+		const sharedTargetLevel = commonData.targetLevel ?? modeData.targetLevel ?? "";
+		const sharedPoints = commonData.points ?? modeData.points ?? 0;
 
-	if(commonData.currentLevel === undefined && modeData.currentLevel !== undefined){
-		commonData.currentLevel = modeData.currentLevel;
+		if(commonData.currentLevel === undefined && modeData.currentLevel !== undefined){
+			commonData.currentLevel = modeData.currentLevel;
+		}
+
+		if(commonData.targetLevel === undefined && modeData.targetLevel !== undefined){
+			commonData.targetLevel = modeData.targetLevel;
+		}
+
+		localStorage.setItem(
+			getHeroCommonKey(currentHero.name),
+			JSON.stringify({
+				...commonData,
+				currentLevel: sharedCurrentLevel,
+				targetLevel: sharedTargetLevel,
+				points: sharedPoints
+			})
+		);
+
+		currentLevelInput.value = sharedCurrentLevel;
+		targetLevelInput.value = sharedTargetLevel;
+		pointsSlider.value = sharedPoints;
+		pointsInput.value = sharedPoints;
+
+		limitCurrent();
+		limitTarget();
+		updateHeroPickerRanks();
+
+		const mission2 = document.getElementById("mission2");
+		const mission3 = document.getElementById("mission3");
+
+		if(mission2) mission2.value = modeData.mission2 || "";
+		if(mission3) mission3.value = modeData.mission3 || "";
+		const missionKO = document.getElementById("missionKO");
+		const missionAssist = document.getElementById("missionAssist");
+		const missionDamage = document.getElementById("missionDamage");
+		const missionHealing = document.getElementById("missionHealing");
+
+		if(missionKO) missionKO.value = modeData.missionKO || "";
+		if(missionAssist) missionAssist.value = modeData.missionAssist || "";
+		if(missionDamage) missionDamage.value = modeData.missionDamage || "";
+		if(missionHealing) missionHealing.value = modeData.missionHealing || "";
+	} finally {
+		isLoadingHeroInputs = false;
 	}
-
-	if(commonData.targetLevel === undefined && modeData.targetLevel !== undefined){
-		commonData.targetLevel = modeData.targetLevel;
-	}
-
-	localStorage.setItem(
-		getHeroCommonKey(currentHero.name),
-		JSON.stringify({
-			...commonData,
-			currentLevel: sharedCurrentLevel,
-			targetLevel: sharedTargetLevel,
-			points: commonData.points ?? modeData.points ?? 0
-		})
-	);
-
-	currentLevelInput.value = sharedCurrentLevel;
-	targetLevelInput.value = sharedTargetLevel;
-
-	updateProficiencyUI();
-
-	const sharedPoints = commonData.points ?? modeData.points ?? 0;
-	pointsSlider.value = sharedPoints;
-	pointsInput.value = sharedPoints;
-
-
-	currentLevelInput.dispatchEvent(new Event("input"));
-	targetLevelInput.dispatchEvent(new Event("input"));
-	
-	const mission2 = document.getElementById("mission2");
-	const mission3 = document.getElementById("mission3");
-
-	if(mission2) mission2.value = modeData.mission2 || "";
-	if(mission3) mission3.value = modeData.mission3 || "";
-	const missionKO = document.getElementById("missionKO");
-	const missionAssist = document.getElementById("missionAssist");
-	const missionDamage = document.getElementById("missionDamage");
-	const missionHealing = document.getElementById("missionHealing");
-
-	if(missionKO) missionKO.value = modeData.missionKO || "";
-	if(missionAssist) missionAssist.value = modeData.missionAssist || "";
-	if(missionDamage) missionDamage.value = modeData.missionDamage || "";
-	if(missionHealing) missionHealing.value = modeData.missionHealing || "";
 }
 
 
@@ -978,9 +981,10 @@ document.addEventListener("input", e=>{
 		"missionHealing",
 		"missionKO",
 		"missionAssist",
-		"pointsInput",
-		"pointsSlider"
+	"pointsInput",
+	"pointsSlider"
 	].includes(e.target.id)){
+		if(isLoadingHeroInputs) return;
 		saveHeroInputs();
 		queueSupabaseSync();
 	}
