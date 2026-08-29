@@ -896,8 +896,6 @@ function saveHeroInputs(){
 
 
 	const modeData = {
-		currentLevel: currentLevelInput.value,
-		targetLevel: targetLevelInput.value,
 		mission2: document.getElementById("mission2")?.value || "",
 		mission3: document.getElementById("mission3")?.value || "",
 		missionKO: document.getElementById("missionKO")?.value || "",
@@ -919,9 +917,29 @@ function loadHeroInputs(){
 
 	const commonData = JSON.parse(localStorage.getItem(getHeroCommonKey(currentHero.name)) || "{}");
 	const modeData = getSavedHeroModeData(currentHero.name);
+	const sharedCurrentLevel = commonData.currentLevel ?? modeData.currentLevel ?? "";
+	const sharedTargetLevel = commonData.targetLevel ?? modeData.targetLevel ?? "";
 
-	currentLevelInput.value = modeData.currentLevel ?? commonData.currentLevel ?? "";
-	targetLevelInput.value = modeData.targetLevel ?? commonData.targetLevel ?? "";
+	if(commonData.currentLevel === undefined && modeData.currentLevel !== undefined){
+		commonData.currentLevel = modeData.currentLevel;
+	}
+
+	if(commonData.targetLevel === undefined && modeData.targetLevel !== undefined){
+		commonData.targetLevel = modeData.targetLevel;
+	}
+
+	localStorage.setItem(
+		getHeroCommonKey(currentHero.name),
+		JSON.stringify({
+			...commonData,
+			currentLevel: sharedCurrentLevel,
+			targetLevel: sharedTargetLevel,
+			points: commonData.points ?? modeData.points ?? 0
+		})
+	);
+
+	currentLevelInput.value = sharedCurrentLevel;
+	targetLevelInput.value = sharedTargetLevel;
 
 	updateProficiencyUI();
 
@@ -1808,8 +1826,6 @@ function buildSupabaseDataFromLocalStorage() {
 
 				heroData.heroes[heroName].modes[dbMode] = {
 					...(heroData.heroes[heroName].modes[dbMode] || {}),
-					currentLevel: Number(parsed.currentLevel) || 0,
-					targetLevel: Number(parsed.targetLevel) || 0,
 					mission2: Number(parsed.mission2) || 0,
 					mission3: Number(parsed.mission3) || 0,
 					mission4: Number(parsed.mission4) || 0,
@@ -1864,8 +1880,6 @@ function syncSupabaseToLocalStorage(dbData) {
 				const missionKO = modeValues.missionKO ?? ((isDeadpool || isStrategist) ? (isDeadpool ? modeValues.mission4 : modeValues.mission3) : "");
 				const missionAssist = modeValues.missionAssist ?? ((isDeadpool || isStrategist) ? (isDeadpool ? modeValues.mission5 : modeValues.mission4) : "");
 				const modeData = {
-					currentLevel: modeValues.currentLevel ?? data.currentLevel ?? "",
-					targetLevel: modeValues.targetLevel ?? data.targetLevel ?? "",
 					mission2: modeValues.mission2 || "",
 					mission3: modeValues.mission3 || "",
 					mission4: modeValues.mission4 || "",
