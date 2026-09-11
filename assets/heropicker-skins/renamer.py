@@ -53,19 +53,23 @@ heroes = {
     "1023": "Rocket Raccoon",
     "1028": "Ultron",
     "1060": "White Fox",
-    "1057": "Deadpool"
+    "1057": "Deadpool",
+    "1066": "The Hood",
+    "1067": "Gorr",
+    
 }
 
 folder = os.path.dirname(os.path.abspath(__file__))
 
 keep_suffix = input("Keep suffix after hero ID? Type 'yes' or press Enter: ").strip().lower() == "yes"
+prefix = input("Enter prefix: ")
 
 for filename in os.listdir(folder):
-    match = re.search(r"_(\d{4})(\d+)", filename)
+    match = re.search(rf"{re.escape(prefix)}(\d{{4}})(.*)", filename)
 
     if match:
         hero_id = match.group(1)
-        suffix = match.group(2)
+        suffix = os.path.splitext(match.group(2))[0]
 
         if hero_id in heroes:
             ext = os.path.splitext(filename)[1]

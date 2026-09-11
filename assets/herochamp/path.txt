@@ -1,1 +1,1 @@
-MarvelContentMarvelUITexturesMasteryCommon
+Mastery\Common
