@@ -61,6 +61,8 @@ let isLoadingHeroInputs = false;
 const maxPointsText = document.getElementById("maxPoints");
 const costumeCount = document.getElementById("costumeCount");
 const costumeSelectAll = document.getElementById("costumeSelectAll");
+const soundEffectsToggle = document.getElementById("soundEffectsToggle");
+const SOUND_EFFECTS_ENABLED_KEY = "heroSelectionSoundEffectsEnabled";
 // #endregion
 
 // #region Hero Data
@@ -83,7 +85,9 @@ const heroNames = ["Adam Warlock","Angela","Black Cat", "Black Panther","Black W
 const heroes = heroNames.map(name => ({ name, pickerImg: heroPickerImg(name), displayImg: heroDisplayImg(name) }));
 const heroNameLookup = new Map(heroNames.map(name => [heroToFile(name), name]));
 const HERO_COSTUME_STATE_KEY = "heroCostumeRotationState";
+const LADY_LOKI_SKIN_IDS = new Set(["502", "504", "505", "506", "1016502", "1016504", "1016505", "1016506"]);
 const heroCostumeRolls = {};
+let activeHeroSelectionAudio = null;
 const HERO_SKIN_MANIFEST = {
     adamwarlock: ["100","101","102","300","301","302","303","500","501","800"],
     angela: ["100","101","300","500","501","502","503"],
@@ -234,6 +238,32 @@ function getHeroPickerSkinImage(hero, skinId){
 
 function getHeroActivePickerImg(hero){
 	return getHeroPickerSkinImage(hero, getHeroActiveSkinId(hero));
+}
+
+function playHeroSelectionSound(hero){
+	if(activeHeroSelectionAudio){
+		activeHeroSelectionAudio.pause();
+		activeHeroSelectionAudio.currentTime = 0;
+		activeHeroSelectionAudio = null;
+	}
+
+	if(!soundEffectsToggle?.checked) return;
+
+	const heroName = typeof hero === "string" ? hero : hero.name;
+	const activeSkinId = getHeroActiveSkinId(heroName);
+	const soundName = heroName === "Loki" && LADY_LOKI_SKIN_IDS.has(String(activeSkinId))
+		? "ladyloki"
+		: heroName === "Bruce Banner"
+			? "hulk"
+			: heroToFile(heroName);
+	const audio = new Audio(`assets/hero select/${soundName}.wav`);
+	activeHeroSelectionAudio = audio;
+	audio.addEventListener("ended", () => {
+		if(activeHeroSelectionAudio === audio) activeHeroSelectionAudio = null;
+	});
+	audio.play().catch(() => {
+		if(activeHeroSelectionAudio === audio) activeHeroSelectionAudio = null;
+	});
 }
 
 function refreshCurrentHeroSkin(){
@@ -715,6 +745,7 @@ searchInput.addEventListener("input", () => {
 
 function selectHero(hero){
 	currentHero=hero;
+	playHeroSelectionSound(hero);
 	localStorage.setItem(LAST_SELECTED_HERO_KEY, hero.name);
 	heroName.innerText=hero.name;
 	heroImg.src=heroDisplayImg(hero.name);
@@ -1007,6 +1038,11 @@ modeToggle.addEventListener("change", ()=>{
 	queueSupabaseSync();
 });
 
+soundEffectsToggle.checked = localStorage.getItem(SOUND_EFFECTS_ENABLED_KEY) === "true";
+soundEffectsToggle.addEventListener("change", () => {
+	localStorage.setItem(SOUND_EFFECTS_ENABLED_KEY, String(soundEffectsToggle.checked));
+});
+
 // #endregion
 
 // #region Simulation
@@ -1238,6 +1274,8 @@ const tutorialHeroButton = document.querySelector(".herobutton");
 const playTutorialButton = document.getElementById("playTutorial");
 let tutorialBubble;
 let tutorialTarget;
+let tutorialTargetClickHandler;
+let tutorialSkipButton;
 let tutorialStep = -1;
 let tutorialActive = false;
 let tutorialWaitingForHero = false;
@@ -1256,6 +1294,14 @@ function getTutorialBubble(){
 		tutorialBubble.innerHTML = '<span class="tutorial-bubble-text"></span><button class="tutorial-bubble-check" type="button" aria-label="Continue tutorial"></button>';
 		tutorialBubble.querySelector(".tutorial-bubble-check").addEventListener("click", advanceTutorial);
 		document.body.appendChild(tutorialBubble);
+
+		tutorialSkipButton = document.createElement("button");
+		tutorialSkipButton.className = "yellowbutton tutorial-skip";
+		tutorialSkipButton.type = "button";
+		tutorialSkipButton.textContent = "Skip Tutorial";
+		tutorialSkipButton.hidden = true;
+		tutorialSkipButton.addEventListener("click", finishTutorial);
+		document.body.appendChild(tutorialSkipButton);
 	}
 	return tutorialBubble;
 }
@@ -1273,9 +1319,16 @@ function positionTutorialBubble(target, side = "top-right"){
 }
 
 function showTutorialBubble(target, text, side = "top-right"){
-	if(tutorialTarget) tutorialTarget.classList.remove("tutorial-target");
+	if(tutorialTarget){
+		tutorialTarget.classList.remove("tutorial-target");
+		tutorialTarget.removeEventListener("click", tutorialTargetClickHandler);
+	}
 	tutorialTarget = target;
 	tutorialTarget.classList.add("tutorial-target");
+	tutorialTargetClickHandler = () => {
+		if(tutorialActive) advanceTutorial();
+	};
+	tutorialTarget.addEventListener("click", tutorialTargetClickHandler);
 	const bubble = getTutorialBubble();
 	bubble.className = `tutorial-bubble tutorial-bubble--${side}`;
 	bubble.querySelector(".tutorial-bubble-text").textContent = text;
@@ -1285,15 +1338,28 @@ function showTutorialBubble(target, text, side = "top-right"){
 
 function hideTutorialBubble(){
 	if(tutorialBubble) tutorialBubble.hidden = true;
-	if(tutorialTarget) tutorialTarget.classList.remove("tutorial-target");
+	if(tutorialTarget){
+		tutorialTarget.classList.remove("tutorial-target");
+		tutorialTarget.removeEventListener("click", tutorialTargetClickHandler);
+	}
 	tutorialTarget = null;
+}
+
+function finishTutorial(){
+	hideTutorialBubble();
+	if(tutorialSkipButton) tutorialSkipButton.hidden = true;
+	tutorialActive = false;
+	tutorialWaitingForHero = false;
+	localStorage.setItem(TUTORIAL_COMPLETE_KEY, "true");
 }
 
 function startTutorial(){
 	if(!tutorialHeroButton) return;
+	getTutorialBubble();
 	tutorialActive = true;
 	tutorialWaitingForHero = false;
 	tutorialStep = -1;
+	tutorialSkipButton.hidden = false;
 	showTutorialBubble(tutorialHeroButton, "First, select a hero.", "top-left");
 }
 
@@ -1321,9 +1387,7 @@ function advanceTutorial(){
 		return;
 	}
 
-	hideTutorialBubble();
-	tutorialActive = false;
-	localStorage.setItem(TUTORIAL_COMPLETE_KEY, "true");
+	finishTutorial();
 }
 
 function continueTutorialAfterHeroSelection(){
