@@ -132,11 +132,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 					<!-- <div class="gift"></div> -->
 
-					<div class="settings"></div>
+					<div class="settings UIHover"></div>
+
+					<button class="mail UIHover" type="button" aria-label="Open mailbox">
+						<img class="mail-notification" src="assets/notification.png" alt="" aria-hidden="true">
+					</button>
 
 					<img src="assets/spacer.png" alt="" class="spacer">
 
-					<div class="profile">
+					<div class="profile UIHover">
 						<img src="assets/profiledefault.png" class="profile-img" alt="">
 						<div class="lvlholder">
 							<img src="assets/lvlholder.png" alt="">
@@ -175,9 +179,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 		<!-- RIGHT PANEL -->
 		<div class="right">
 			<div class="topbar">
-				<button class="changecostume" type="button" aria-label="Edit random costume rotation"></button>
+				<button class="changecostume UIClick1 UIHover" type="button" aria-label="Edit random costume rotation"></button>
 				<div class="hero-name" id="heroName">None</div>
-				<div class="infobutton"></div>
+				<div class="infobutton UISoftClick UIHover"></div>
 
 				<!-- Lattice
 				<div class="latticedisplay">
@@ -196,7 +200,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 				<div class="rankinput reworked" id="mainInputs">
 
 					<div class="rank-top">
-						<div class="rankpicker">
+						<div class="rankpicker UISoftClick50">
 							<div class="input-field">
 								<input type="number" id="currentLevel" required spellcheck="false">
 								<label>Current Level</label>
@@ -206,7 +210,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 							</div>
 						</div>
 						<img src="assets/arrow.png" class="arrowimg" alt="">
-						<div class="rankpicker">
+						<div class="rankpicker UISoftClick50">
 							<div class="input-field">
 								<input type="number" id="targetLevel" required spellcheck="false">
 								<label>Target Level</label>
@@ -224,13 +228,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 							<div class="proficiency-text">
 								PROFICIENCY
-								<input type="number" id="pointsInput" min="0" value="0">
+								<input class="UISoftClick50" type="number" id="pointsInput" min="0" value="0">
 								/ <span id="maxPoints">0</span>
 							</div>
 
-							<div class="mode-toggle">
+							<div class="mode-toggle ">
 								<span>Normal</span>
-								<label class="switch">
+								<label class="switch UISoftClick50">
 									<input type="checkbox" id="modeToggle">
 									<span class="slider-toggle"></span>
 								</label>
@@ -240,7 +244,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 						</div>
 
 
-						<input type="range" id="pointsSlider" min="0" max="0" value="0">
+						<input class="UISoftClick50" type="range" id="pointsSlider" min="0" max="0" value="0">
 					</div>
 
 
@@ -295,19 +299,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 
 
-				<div class="search">
+				<div class="search UIClick1">
 					<input id="SearchInput" placeholder="Search">
 				</div>
 
 
 
-				<label class="strikesquad">
+				<label class="strikesquad UIClick1">
 					<input type="checkbox" id="strikeSquadOnly">
 					<span class="sscheckmark"></span>
 					Strike Squad
 				</label>
 
-				<label class="strikesquad">
+				<label class="strikesquad UIClick1">
 					<input type="checkbox" id="strikeSquadFirst">
 					<span class="sscheckmark"></span>
 					Strike Squad First
@@ -315,7 +319,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 
 
-				<div class="sort-filter">
+				<div class="sort-filter UIdropdown">
 					<select id="heroSort" aria-label="Sort heroes">
 						<option value="name">A-Z</option>
 						<option value="level">Level</option>
@@ -323,7 +327,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 					</select>
 				</div>
 
-				<div class="role-filter">
+				<div class="role-filter UIdropdown">
 					<select id="roleFilter">
 						<option value="All">All Roles</option>
 						<option value="Vanguard">Vanguard</option>
@@ -361,6 +365,28 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 					<div class="costume-grid" id="costumeGrid">
 					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- THEME MUSIC PICKER -->
+	<div class="modal costume-modal" id="themeMusicModal">
+		<div class="modal-content costume-modal-content theme-music-modal-content">
+			<button class="mobile-popup-close" type="button" aria-label="Close popup" data-close-panel="themeMusicModal"></button>
+			<div class="costume-modal-shell">
+				<div class="costume-modal-title">Edit Theme Music Rotation</div>
+				<div class="costume-modal-divider"></div>
+				<div class="costume-modal-panel theme-music-panel">
+					<div class="costume-modal-toolbar">
+						<div class="costume-modal-count" id="themeMusicCount">Added to Theme Music List: 0/11</div>
+						<label class="costume-select-all">
+							<input type="checkbox" id="themeMusicSelectAll">
+							<span class="costume-select-all-box"></span>
+							<span>Select All</span>
+						</label>
+					</div>
+					<div class="theme-music-grid" id="themeMusicGrid"></div>
 				</div>
 			</div>
 		</div>
@@ -426,16 +452,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 				<div class="aboutpagebottom">
 
 
-					<div class="abouthalf">
-						<h3>Change Log</h3>
-						<div class="changelog">
-							<p>- Hero Added Gorr The God Butcher</p>
-							<p>- Added S9 and early S10 skins</p>
 
+
+					<div class="abouthalf">
+						<h3>Contributors</h3>
+						<div class="changelog">
+							<a href="https://www.nexusmods.com/profile/paillettesbr05" target="_blank">Paillette (Audio Mod Maker)</a>
+							<a href="https://www.nexusmods.com/profile/roomnumber16" target="_blank">roomnumber16 (Mod Maker)</a>
 						</div>
 					</div>
-
-
+			
+				</div>
+				<div class="footer">
 					<div class="about-support">
 						<P>Support me and this project 💙</P>
 						<script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js"
@@ -443,20 +471,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 							data-font="Lato" data-text="Buy me a coffee" data-outline-color="#ffffff"
 							data-font-color="#ffffff" data-coffee-color="#FFDD00"></script>
 					</div>
-
-
-					<div class="abouthalf">
-						<h3>Code Contributors (submit in Discord)</h3>
-						<div class="changelog">
-							<p></p>
-						</div>
+					<div class="about-links">
+						<a href="terms.html" target="_blank">Terms of Service</a>
+						<p> | </p>
+						<a href="policy.html" target="_blank">Privacy Policy</a>
 					</div>
-
-				</div>
-				<div class="footer">
-					<a href="terms.html" target="_blank">Terms of Service</a>
-					<p> | </p>
-					<a href="policy.html" target="_blank">Privacy Policy</a>
 				</div>
 			</div>
 
@@ -465,78 +484,196 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 	</div>
 
 
+
 	<div class="settings-panel" id="settingsPanel">
 		<div class="settingsscreen">
 			<button class="mobile-popup-close" type="button" aria-label="Close popup"
 				data-close-panel="settingsPanel"></button>
-			<img src="assets/cornerbr.png" alt="" class="cornerpic cornerbr">
-			<img src="assets/cornertl.png" alt="" class="cornerpic cornertl">
+			<img src="assets/cornerold (1).png" alt="" class="settings-corner settings-corner-top">
+			<img src="assets/cornerold (2).png" alt="" class="settings-corner settings-corner-bottom">
 
-			<h1>Settings</h1>
+			<header class="settings-header">
+				<h1>Settings</h1>
+			</header>
 
-			<h2>Account</h2>
+			<div class="settings-layout">
+				<div class="settingscontent">
+					<section class="settings-section">
+						<h2>Account</h2>
+						<div class="settings-account-row">
+							<div class="discord-account">
+								<img src="assets/discordpfp.png" class="profile-img discordpfp" alt="">
+								<div class="profile-info">
+									<div class="profile-name"></div>
+									<button id="discordAuthBtn" class="discord-btn yellowbutton UIHover UISoftClick50" data-settings-help-title="Discord Account" data-settings-help="Sign in to sync your calculator progress with your Discord account. Logging in replaces this device's local save.">Log in with Discord</button>
+								</div>
+							</div>
+							<p class="loginwarning">Logging in with Discord replaces the current local save. Export it first if you want to keep it.</p>
+						</div>
+					</section>
 
+										<section class="settings-section save-section">
+						<h2>Save File</h2>
 
-			<div class="discord-account">
+				<div class="savefile">
 
-				<img src="assets/discordpfp.png" class="profile-img discordpfp" alt="">
+					<div class="import">
+						<img src="assets/savefileimport.png" alt="">
 
+						<button class="savefilebutton" id="savefileimport" style="position: relative; overflow: hidden;" data-settings-help-title="Import Save File" data-settings-help="Restore calculator progress from a save file you previously exported.">
+							<div class="savefilebuttonyellowleft" bis_skin_checked="1"></div>
+							<div class="savefilebuttonyellowmiddle" bis_skin_checked="1">Import</div>
+							<div class="savefilebuttonyellowright" bis_skin_checked="1"></div>
+						</button>
 
-				<div class="profile-info">
-					<div class="profile-name"></div>
-					<button id="discordAuthBtn" class="discord-btn yellowbutton">Log in with Discord</button>
+					</div>
+
+					<div class="export">
+						<img src="assets/savefileexport.png" alt="">
+
+						<button class="savefilebutton" id="savefileexport" style="position: relative; overflow: hidden;" data-settings-help-title="Export Save File" data-settings-help="Download a backup of your calculator progress to move it to another device or keep it safe.">
+							<div class="savefilebuttonyellowleft" bis_skin_checked="1"></div>
+							<div class="savefilebuttonyellowmiddle" bis_skin_checked="1">Export</div>
+							<div class="savefilebuttonyellowright" bis_skin_checked="1"></div>
+						</button>
+
+					</div>
+
+					<div class=" delete">
+						<img src="assets/savefiledelete.png" alt="">
+
+						<button class="savefilebutton" id="savefiledelete" style="position: relative; overflow: hidden;" data-settings-help-title="Delete Saved Progress" data-settings-help="Remove saved calculator progress from this device. Export a backup first if you may need it later.">
+							<div class="savefilebuttonyellowleft" bis_skin_checked="1"></div>
+							<div class="savefilebuttonyellowmiddle" bis_skin_checked="1">Delete</div>
+							<div class="savefilebuttonyellowright" bis_skin_checked="1"></div>
+						</button>
+					</div>
+
 				</div>
+					</section>
+
+					<section class="settings-section">
+						<h2>Audio</h2>
+
+				<label class="settings-toggle" for="uiSoundEffectsToggle" data-settings-help-title="UI Sound Effects" data-settings-help="Turn interface click and hover sounds on or off.">
+					<span>UI Sound Effects</span>
+					<span class="switch">
+						<input type="checkbox" id="uiSoundEffectsToggle">
+						<span class="slider-toggle"></span>
+					</span>
+				</label>	
+					
+				<div class="settings-volume" data-depends-on="uiSoundEffectsToggle" data-settings-help-title="UI Sound Effects Volume" data-settings-help="Adjust the volume used for interface click and hover sounds.">
+					<label for="uiSoundEffectsVolume">UI Sound Effects Volume</label>
+					<div class="volume-control">
+						<output id="uiSoundEffectsVolumeValue" class="volume-value" for="uiSoundEffectsVolume" tabindex="0" title="Click to edit volume">60</output>
+						<button class="volume-arrow volume-arrow-left UISoftClick50" type="button" data-volume-input="uiSoundEffectsVolume" data-step="-1" aria-label="Decrease UI sound effects volume"></button>
+						<span class="range-shell"><input type="range" id="uiSoundEffectsVolume" min="0" max="100" value="60"></span>
+						<button class="volume-arrow volume-arrow-right UISoftClick50" type="button" data-volume-input="uiSoundEffectsVolume" data-step="1" aria-label="Increase UI sound effects volume"></button>
+					</div>
+				</div>
+				
+				<label class="settings-toggle" for="soundEffectsToggle" data-settings-help-title="Hero Selection Voicelines" data-settings-help="Turn hero selection voice lines on or off.">
+					<span>Hero Selection Voicelines</span>
+					<span class="switch">
+						<input type="checkbox" id="soundEffectsToggle">
+						<span class="slider-toggle"></span>
+					</span>
+				</label>
+
+				<div class="settings-volume" data-depends-on="soundEffectsToggle" data-settings-help-title="Hero Voiceline Volume" data-settings-help="Adjust the volume used for hero selection voice lines.">
+					<label for="heroVoicelineVolume">Hero Voiceline Volume</label>
+					<div class="volume-control">
+						<output id="heroVoicelineVolumeValue" class="volume-value" for="heroVoicelineVolume" tabindex="0" title="Click to edit volume">70</output>
+						<button class="volume-arrow volume-arrow-left UISoftClick50" type="button" data-volume-input="heroVoicelineVolume" data-step="-1" aria-label="Decrease hero voiceline volume"></button>
+						<span class="range-shell"><input type="range" id="heroVoicelineVolume" min="0" max="100" value="70"></span>
+						<button class="volume-arrow volume-arrow-right UISoftClick50" type="button" data-volume-input="heroVoicelineVolume" data-step="1" aria-label="Increase hero voiceline volume"></button>
+					</div>
+				</div>
+
+				<label class="settings-toggle" for="themeMusicToggle" data-settings-help-title="Theme Music" data-settings-help="Turn the selected theme music on or off.">
+					<span>Theme Music</span>
+					<span class="switch">
+						<input type="checkbox" id="themeMusicToggle">
+						<span class="slider-toggle"></span>
+					</span>
+				</label>
+				<label class="settings-toggle" for="themeMusicRandomToggle" data-depends-on="themeMusicToggle" data-settings-help-title="Play Random Theme Song" data-settings-help="After a song ends, play another random song from your selected theme music list.">
+					<span>Play Random Theme Song</span>
+					<span class="switch">
+						<input type="checkbox" id="themeMusicRandomToggle">
+						<span class="slider-toggle"></span>
+					</span>
+				</label>
+
+				<div class="settings-volume" data-depends-on="themeMusicToggle" data-settings-help-title="Theme Music Volume" data-settings-help="Adjust the volume of the selected theme music.">
+					<label for="themeMusicVolume">Theme Music Volume</label>
+					<div class="volume-control">
+						<output id="themeMusicVolumeValue" class="volume-value" for="themeMusicVolume" tabindex="0" title="Click to edit volume">35</output>
+						<button class="volume-arrow volume-arrow-left UISoftClick50" type="button" data-volume-input="themeMusicVolume" data-step="-1" aria-label="Decrease theme music volume"></button>
+						<span class="range-shell"><input type="range" id="themeMusicVolume" min="0" max="100" value="35"></span>
+						<button class="volume-arrow volume-arrow-right UISoftClick50" type="button" data-volume-input="themeMusicVolume" data-step="1" aria-label="Increase theme music volume"></button>
+					</div>
+				</div>
+
+				<label class="settings-toggle" for="pauseThemeMusicOnBlur" data-depends-on="themeMusicToggle" data-settings-help-title="Pause Music When Unfocused" data-settings-help="Pause theme music whenever the calculator is not the active window or tab.">
+					<span>Pause Theme Music When Calculator Is Not Focused</span>
+					<span class="switch">
+						<input type="checkbox" id="pauseThemeMusicOnBlur">
+						<span class="slider-toggle"></span>
+					</span>
+				</label>
+				
+				
+
+					</section>
+
+					<section class="settings-section">
+						<h2>Mailbox</h2>
+						<label class="settings-toggle" for="mailUse24HourClock" data-settings-help-title="24-Hour Clock" data-settings-help="Default: AM/PM">
+							<span>24-Hour Clock</span>
+							<span class="switch">
+								<input type="checkbox" id="mailUse24HourClock">
+								<span class="slider-toggle"></span>
+							</span>
+						</label>
+						<label class="settings-toggle" for="mailUseDayFirstDate" data-settings-help-title="DD/MM/YYYY Date" data-settings-help="Default: MM/DD/YYYY">
+							<span>DD/MM/YYYY Format</span>
+							<span class="switch">
+								<input type="checkbox" id="mailUseDayFirstDate">
+								<span class="slider-toggle"></span>
+							</span>
+						</label>
+					</section>
+
+
+				</div>
+				<aside class="settings-aside" aria-label="Settings information">
+					<h2 id="settingsHelpTitle">SETTINGS</h2>
+					<div class="settings-aside-rule"></div>
+					<p id="settingsHelpDescription">Customize your calculator experience, audio, account sync, and saved progress.</p>
+					<p class="settings-aside-note" id="settingsHelpNote"></p>
+				</aside>
 			</div>
-			<p class="loginwarning">Warning: <br><strong>Logging in with Discord will replace your current local save.
-				</strong><br>To keep this save, export it first. After logging in, import that file again.</p>
 
-			<h2>Audio</h2>
-			<label class="settings-toggle" for="soundEffectsToggle">
-				<span>Hero Selection Sound Effects</span>
-				<span class="switch">
-					<input type="checkbox" id="soundEffectsToggle">
-					<span class="slider-toggle"></span>
-				</span>
-			</label>
+		</div>
+	</div>
 
-			<h2>Save File</h2>
-
-			<div class="savefile">
-
-				<div class="import">
-					<img src="assets/savefileimport.png" alt="">
-
-					<button class="savefilebutton" id="savefileimport" style="position: relative; overflow: hidden;">
-						<div class="savefilebuttonyellowleft" bis_skin_checked="1"></div>
-						<div class="savefilebuttonyellowmiddle" bis_skin_checked="1">Import</div>
-						<div class="savefilebuttonyellowright" bis_skin_checked="1"></div>
-					</button>
-
-				</div>
-
-				<div class="export">
-					<img src="assets/savefileexport.png" alt="">
-
-					<button class="savefilebutton" id="savefileexport" style="position: relative; overflow: hidden;">
-						<div class="savefilebuttonyellowleft" bis_skin_checked="1"></div>
-						<div class="savefilebuttonyellowmiddle" bis_skin_checked="1">Export</div>
-						<div class="savefilebuttonyellowright" bis_skin_checked="1"></div>
-					</button>
-
-				</div>
-
-				<div class=" delete">
-					<img src="assets/savefiledelete.png" alt="">
-
-					<button class="savefilebutton" id="savefiledelete" style="position: relative; overflow: hidden;">
-						<div class="savefilebuttonyellowleft" bis_skin_checked="1"></div>
-						<div class="savefilebuttonyellowmiddle" bis_skin_checked="1">Delete</div>
-						<div class="savefilebuttonyellowright" bis_skin_checked="1"></div>
-					</button>
-				</div>
-
+	<div class="mail-panel" id="mailPanel">
+		<div class="mailscreen">
+			<button class="mobile-popup-close" type="button" aria-label="Close mailbox" data-close-panel="mailPanel"></button>
+			<img src="assets/cornerold (1).png" alt="" class="settings-corner settings-corner-top">
+			<img src="assets/cornerold (2).png" alt="" class="settings-corner settings-corner-bottom">
+			<header class="mail-header">
+				<h1>Mailbox</h1>
+			</header>
+			<div class="mail-layout">
+				<section class="mail-list-panel" aria-label="Mail list">
+					<div class="mail-list" id="mailList"></div>
+					<button class="mail-read-all UISoftClick50" id="markAllMailsRead" type="button">Mark All As Read</button>
+				</section>
+				<section class="mail-detail" id="mailDetail" aria-live="polite"></section>
 			</div>
-
 		</div>
 	</div>
 
@@ -634,6 +771,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 
 
+
+	<button class="theme-menu-button UISoftClick UIHover" id="themePickerButton" type="button" aria-label="Choose theme music"></button>
+	<button class="esc-menu-button UISoftClick" id="escMenuButton" type="button" aria-label="Close open menu"></button>
 
 	<img id="cursorImg" draggable="false">
 	<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

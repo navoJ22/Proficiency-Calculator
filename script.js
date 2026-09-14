@@ -63,6 +63,78 @@ const costumeCount = document.getElementById("costumeCount");
 const costumeSelectAll = document.getElementById("costumeSelectAll");
 const soundEffectsToggle = document.getElementById("soundEffectsToggle");
 const SOUND_EFFECTS_ENABLED_KEY = "heroSelectionSoundEffectsEnabled";
+const uiSoundEffectsToggle = document.getElementById("uiSoundEffectsToggle");
+const uiSoundEffectsVolume = document.getElementById("uiSoundEffectsVolume");
+const uiSoundEffectsVolumeValue = document.getElementById("uiSoundEffectsVolumeValue");
+const UI_SOUND_EFFECTS_ENABLED_KEY = "uiSoundEffectsEnabled";
+const UI_SOUND_EFFECTS_VOLUME_KEY = "uiSoundEffectsVolume";
+const heroVoicelineVolume = document.getElementById("heroVoicelineVolume");
+const heroVoicelineVolumeValue = document.getElementById("heroVoicelineVolumeValue");
+const HERO_VOICELINE_VOLUME_KEY = "heroVoicelineVolume";
+const themeMusicModal = document.getElementById("themeMusicModal");
+const themeMusicGrid = document.getElementById("themeMusicGrid");
+const themeMusicCount = document.getElementById("themeMusicCount");
+const themeMusicSelectAll = document.getElementById("themeMusicSelectAll");
+const themeMusicVolume = document.getElementById("themeMusicVolume");
+const themeMusicVolumeValue = document.getElementById("themeMusicVolumeValue");
+const themeMusicToggle = document.getElementById("themeMusicToggle");
+const themeMusicRandomToggle = document.getElementById("themeMusicRandomToggle");
+const pauseThemeMusicOnBlur = document.getElementById("pauseThemeMusicOnBlur");
+const THEME_MUSIC_SELECTIONS_KEY = "themeMusicSelections";
+const THEME_MUSIC_VOLUME_KEY = "themeMusicVolume";
+const THEME_MUSIC_ENABLED_KEY = "themeMusicEnabled";
+const THEME_MUSIC_RANDOM_KEY = "themeMusicRandom";
+const THEME_MUSIC_PAUSE_ON_BLUR_KEY = "themeMusicPauseOnBlur";
+const THEME_MUSIC_SESSION_KEY = "themeMusicSessionChoice";
+const READ_MAILS_KEY = "ReadMails";
+const MAIL_24_HOUR_CLOCK_KEY = "mailUse24HourClock";
+const MAIL_DAY_FIRST_DATE_KEY = "mailUseDayFirstDate";
+const mailUse24HourClock = document.getElementById("mailUse24HourClock");
+const mailUseDayFirstDate = document.getElementById("mailUseDayFirstDate");
+const THEME_MUSIC_OPTIONS = ["S0", "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "S10"];
+let activeThemeMusic = null;
+let lastUiHoverSoundAt = 0;
+
+const UI_SOUND_FILES = {
+	leftClick1: "assets/audio effects/LeftClick1.wav",
+	leftClick2: "assets/audio effects/LeftClick2.wav",
+	SoftClick: "assets/audio effects/softclick.wav",
+	mainhover: "assets/audio effects/MenuButtonHover.wav",
+	hover1: "assets/audio effects/Hover1.wav",
+	hover2: "assets/audio effects/Hover2.wav",
+	checkbox: "assets/audio effects/checkbox.wav",
+	herocardclick: "assets/audio effects/herocardclick.wav",
+	Dropdown: "assets/audio effects/Dropdown.wav",
+	menuBack: "assets/audio effects/728279154aaaMenuBack1.wav",
+	heroPicker: "assets/audio effects/heroPicker.wav",
+	heroPickerSelect: "assets/audio effects/97514591aaaHeroPicker.wav"
+};
+
+function playUiSound(effect = "click", maxVolume = 1){
+	const effects = Array.isArray(effect) ? effect : [effect];
+	const validEffects = effects.filter(name => UI_SOUND_FILES[name]);
+	if(!uiSoundEffectsToggle?.checked || !validEffects.length) return;
+	const selectedEffect = validEffects[Math.floor(Math.random() * validEffects.length)];
+	if(selectedEffect === "hover"){
+		const now = performance.now();
+		if(now - lastUiHoverSoundAt < 20) return;
+		lastUiHoverSoundAt = now;
+	}
+	const audio = new Audio(UI_SOUND_FILES[selectedEffect]);
+	const userVolume = Number(uiSoundEffectsVolume?.value ?? 60) / 100;
+	const elementMaxVolume = Math.max(0, Math.min(1, Number(maxVolume) || 0));
+	audio.volume = userVolume * elementMaxVolume;
+	audio.play().catch(() => {});
+}
+
+function addUiSounds(element, { click = "click", hover = "hover1", maxVolume = 1 } = {}){
+	if(!element) return;
+	if(click) element.addEventListener("click", () => playUiSound(click, maxVolume));
+	if(hover) element.addEventListener("mouseenter", () => playUiSound(hover, maxVolume));
+}
+
+
+
 // #endregion
 
 // #region Hero Data
@@ -213,6 +285,97 @@ function pickRandomValue(values){
 	return values[Math.floor(Math.random() * values.length)];
 }
 
+// #region Theme Music
+function getThemeMusicSelections(){
+	try {
+		const saved = JSON.parse(localStorage.getItem(THEME_MUSIC_SELECTIONS_KEY) || "[]");
+		return Array.isArray(saved) ? [...new Set(saved.filter(theme => THEME_MUSIC_OPTIONS.includes(theme)))] : [];
+	} catch {
+		return [];
+	}
+}
+
+function setThemeMusicSelections(selections){
+	const validSelections = [...new Set(selections.filter(theme => THEME_MUSIC_OPTIONS.includes(theme)))];
+	localStorage.setItem(THEME_MUSIC_SELECTIONS_KEY, JSON.stringify(validSelections));
+	const activeTheme = sessionStorage.getItem(THEME_MUSIC_SESSION_KEY);
+	if(!validSelections.includes(activeTheme)){
+		sessionStorage.removeItem(THEME_MUSIC_SESSION_KEY);
+		startThemeMusic();
+	}
+	renderThemeMusicCards();
+}
+
+function updateThemeMusicSummary(){
+	const selections = getThemeMusicSelections();
+	if(themeMusicCount) themeMusicCount.textContent = `Added to Theme Music List: ${selections.length}/${THEME_MUSIC_OPTIONS.length}`;
+	if(themeMusicSelectAll) themeMusicSelectAll.checked = selections.length === THEME_MUSIC_OPTIONS.length;
+}
+
+function renderThemeMusicCards(){
+	if(!themeMusicGrid) return;
+	const selected = new Set(getThemeMusicSelections());
+	themeMusicGrid.innerHTML = THEME_MUSIC_OPTIONS.map(theme => `
+		<button class="theme-music-card ${selected.has(theme) ? "selected" : ""}" type="button" data-theme="${theme}" aria-pressed="${selected.has(theme)}">
+			<img src="assets/lobby/${theme}.png" alt="${theme} theme music">
+			<span class="theme-music-card-check" aria-hidden="true"></span>
+		</button>`).join("");
+	themeMusicGrid.querySelectorAll(".theme-music-card").forEach(card => {
+		addUiSounds(card, { click: "SoftClick", hover: "Hover1" });
+	});
+	updateThemeMusicSummary();
+}
+
+function updateThemeMusicVolume(){
+	const volume = Number(themeMusicVolume?.value ?? 35) / 100;
+	if(activeThemeMusic) activeThemeMusic.volume = volume;
+	if(themeMusicVolumeValue) updateSettingsVolumeDisplay(themeMusicVolume, themeMusicVolumeValue);
+}
+
+function startThemeMusic(){
+	if(activeThemeMusic){
+		activeThemeMusic.pause();
+		activeThemeMusic = null;
+	}
+	if(!themeMusicToggle?.checked) return;
+
+	const selections = getThemeMusicSelections();
+	if(!selections.length) return;
+	let theme = sessionStorage.getItem(THEME_MUSIC_SESSION_KEY);
+	if(!selections.includes(theme)){
+		theme = pickRandomValue(selections);
+		sessionStorage.setItem(THEME_MUSIC_SESSION_KEY, theme);
+	}
+
+	const audio = new Audio(`assets/lobby/${theme}.wav`);
+	audio.loop = !themeMusicRandomToggle?.checked;
+	audio.volume = Number(themeMusicVolume?.value ?? 35) / 100;
+	activeThemeMusic = audio;
+	audio.addEventListener("ended", () => {
+		if(activeThemeMusic !== audio || !themeMusicToggle?.checked || !themeMusicRandomToggle?.checked) return;
+		const availableThemes = getThemeMusicSelections();
+		const nextThemes = availableThemes.filter(item => item !== theme);
+		if(!availableThemes.length) return;
+		sessionStorage.setItem(THEME_MUSIC_SESSION_KEY, pickRandomValue(nextThemes.length ? nextThemes : availableThemes));
+		startThemeMusic();
+	});
+	audio.play().catch(() => {});
+}
+
+function syncThemeMusicFocus(){
+	if(!activeThemeMusic || !pauseThemeMusicOnBlur?.checked) return;
+	if(document.hidden || !document.hasFocus()) activeThemeMusic.pause();
+	else activeThemeMusic.play().catch(() => {});
+}
+
+document.addEventListener("visibilitychange", syncThemeMusicFocus);
+window.addEventListener("blur", syncThemeMusicFocus);
+window.addEventListener("focus", syncThemeMusicFocus);
+document.addEventListener("pointerdown", () => {
+	if(activeThemeMusic && !document.hidden && document.hasFocus()) activeThemeMusic.play().catch(() => {});
+}, { once: true });
+// #endregion
+
 function getHeroActiveSkinId(hero, forceRefresh = false){
 	if(!hero) return "default";
 
@@ -257,6 +420,7 @@ function playHeroSelectionSound(hero){
 			? "hulk"
 			: heroToFile(heroName);
 	const audio = new Audio(`assets/hero select/${soundName}.wav`);
+	audio.volume = Number(heroVoicelineVolume?.value ?? 70) / 100;
 	activeHeroSelectionAudio = audio;
 	audio.addEventListener("ended", () => {
 		if(activeHeroSelectionAudio === audio) activeHeroSelectionAudio = null;
@@ -312,6 +476,7 @@ function renderCostumeCards(){
 			<div class="costume-card-check" aria-hidden="true"><div class="check-selected"></div></div>
 			<img src="${option.image}" class="" alt="${currentHero.name} ${option.name}">
 		`;
+		addUiSounds(card, { click: "SoftClick", hover: "Hover1" });
 
 		card.addEventListener("click", () => {
 			const nextSelectedIds = new Set(getHeroCostumeSelections(currentHero));
@@ -681,7 +846,9 @@ function renderHeroes(filter = "All", search = "") {
 		);
 
 		card.innerHTML = `
-			<div class="herocard-bg">
+			<div class="herocard-bg UIHover">
+				<img src="${getHeroActivePickerImg(hero.name)}" class="herocard-img herocard-echo herocard-echo-yellow" aria-hidden="true">
+				<img src="${getHeroActivePickerImg(hero.name)}" class="herocard-img herocard-echo herocard-echo-cyan" aria-hidden="true">
 				<img src="${getHeroActivePickerImg(hero.name)}" class="herocard-img">
 
 				<div class="herocard-holder">
@@ -709,16 +876,26 @@ function renderHeroes(filter = "All", search = "") {
 			e.stopPropagation();
 
 			const index = strikeSquad.indexOf(hero.name);
+			const wasAdded = index === -1;
 
-			if(index === -1){
+			if(wasAdded){
 				strikeSquad.push(hero.name);
 			}else{
 				strikeSquad.splice(index, 1);
 			}
+			card.classList.toggle("strike-selected", wasAdded);
+			card.classList.add(wasAdded ? "strike-pulse-add" : "strike-pulse-remove");
+			cursorImg.src = wasAdded
+				? "assets/cursor-removess.png"
+				: "assets/cursor-addss.png";
+			const strikeSquadIcon = card.querySelector(".herocard-ss");
+			if(strikeSquadIcon){
+				strikeSquadIcon.src = wasAdded ? "assets/strikesquadyellow.png" : "";
+				strikeSquadIcon.style.display = wasAdded ? "block" : "none";
+			}
 
 			saveStrikeSquad();
 			queueSupabaseSync();
-			renderHeroes(filter, search);
 		};
 
 		heroGrid.appendChild(card);
@@ -870,14 +1047,20 @@ function buildMissionInputs(hero){
 
 
 
-	<button class="calculate" id="calculate" onclick="simulate()">
+
+
+	<button class="calculate UICalculate" id="calculate" onclick="simulate()">
 		<div class="yellowleft"></div>
 		<div class="yellowmiddle" id="calculateText">Calculate</div>
 		<div class="yellowright"></div>
 	</button>
 	`;
+	wrap.querySelectorAll(".input-mission").forEach(missionInput => {
+		addUiSounds(missionInput, { click: "SoftClick", hover: false, maxVolume: 0.3 });
+	});
 	const button = document.getElementById("calculate");
 
+	addUiSounds(button, { click: "leftClick2", hover: "SoftClick", maxVolume: 0.5 });
 	button.addEventListener("mouseenter", playButtonAnimation);
 }
 document.addEventListener("input", (e) => {
@@ -1042,6 +1225,141 @@ soundEffectsToggle.checked = localStorage.getItem(SOUND_EFFECTS_ENABLED_KEY) ===
 soundEffectsToggle.addEventListener("change", () => {
 	localStorage.setItem(SOUND_EFFECTS_ENABLED_KEY, String(soundEffectsToggle.checked));
 });
+
+uiSoundEffectsToggle.checked = localStorage.getItem(UI_SOUND_EFFECTS_ENABLED_KEY) === "true";
+uiSoundEffectsVolume.value = localStorage.getItem(UI_SOUND_EFFECTS_VOLUME_KEY) || "60";
+function updateUiSoundEffectsVolume(){
+	updateSettingsVolumeDisplay(uiSoundEffectsVolume, uiSoundEffectsVolumeValue);
+}
+updateUiSoundEffectsVolume();
+uiSoundEffectsToggle.addEventListener("change", () => {
+	localStorage.setItem(UI_SOUND_EFFECTS_ENABLED_KEY, String(uiSoundEffectsToggle.checked));
+});
+uiSoundEffectsVolume.addEventListener("input", () => {
+	localStorage.setItem(UI_SOUND_EFFECTS_VOLUME_KEY, uiSoundEffectsVolume.value);
+	updateUiSoundEffectsVolume();
+});
+
+heroVoicelineVolume.value = localStorage.getItem(HERO_VOICELINE_VOLUME_KEY) || "70";
+function updateHeroVoicelineVolume(){
+	const volume = Number(heroVoicelineVolume.value) / 100;
+	if(activeHeroSelectionAudio) activeHeroSelectionAudio.volume = volume;
+	updateSettingsVolumeDisplay(heroVoicelineVolume, heroVoicelineVolumeValue);
+}
+updateHeroVoicelineVolume();
+heroVoicelineVolume.addEventListener("input", () => {
+	localStorage.setItem(HERO_VOICELINE_VOLUME_KEY, heroVoicelineVolume.value);
+	updateHeroVoicelineVolume();
+});
+
+themeMusicVolume.value = localStorage.getItem(THEME_MUSIC_VOLUME_KEY) || "35";
+themeMusicToggle.checked = localStorage.getItem(THEME_MUSIC_ENABLED_KEY) !== "false";
+themeMusicRandomToggle.checked = localStorage.getItem(THEME_MUSIC_RANDOM_KEY) === "true";
+pauseThemeMusicOnBlur.checked = localStorage.getItem(THEME_MUSIC_PAUSE_ON_BLUR_KEY) !== "false";
+updateThemeMusicVolume();
+themeMusicToggle.addEventListener("change", () => {
+	localStorage.setItem(THEME_MUSIC_ENABLED_KEY, String(themeMusicToggle.checked));
+	if(themeMusicToggle.checked) startThemeMusic();
+	else {
+		activeThemeMusic?.pause();
+		activeThemeMusic = null;
+	}
+});
+themeMusicRandomToggle.addEventListener("change", () => {
+	localStorage.setItem(THEME_MUSIC_RANDOM_KEY, String(themeMusicRandomToggle.checked));
+	if(activeThemeMusic) activeThemeMusic.loop = !themeMusicRandomToggle.checked;
+});
+themeMusicVolume.addEventListener("input", () => {
+	localStorage.setItem(THEME_MUSIC_VOLUME_KEY, themeMusicVolume.value);
+	updateThemeMusicVolume();
+});
+pauseThemeMusicOnBlur.addEventListener("change", () => {
+	localStorage.setItem(THEME_MUSIC_PAUSE_ON_BLUR_KEY, String(pauseThemeMusicOnBlur.checked));
+	if(!pauseThemeMusicOnBlur.checked && activeThemeMusic && !document.hidden) activeThemeMusic.play().catch(() => {});
+});
+
+function setupSettingDependencies(){
+	const dependentSettings = [...document.querySelectorAll("[data-depends-on]")];
+	const sync = setting => {
+		const controllerIds = setting.dataset.dependsOn.split(/\s+/).filter(Boolean);
+		const isEnabled = controllerIds.every(id => document.getElementById(id)?.checked);
+		setting.classList.toggle("is-disabled", !isEnabled);
+		setting.setAttribute("aria-disabled", String(!isEnabled));
+		setting.querySelectorAll("input, button, select, textarea").forEach(control => {
+			control.disabled = !isEnabled;
+		});
+		setting.querySelectorAll("[tabindex]").forEach(control => {
+			control.tabIndex = isEnabled ? Number(control.dataset.enabledTabIndex || 0) : -1;
+		});
+	};
+
+	dependentSettings.forEach(setting => {
+		setting.dataset.dependsOn.split(/\s+/).filter(Boolean).forEach(id => {
+			document.getElementById(id)?.addEventListener("change", () => sync(setting));
+		});
+		sync(setting);
+	});
+}
+
+setupSettingDependencies();
+
+function updateSettingsVolumeDisplay(input, display){
+	if(!input || !display) return;
+	display.textContent = input.value;
+	const min = Number(input.min || 0);
+	const max = Number(input.max || 100);
+	const percent = ((Number(input.value) - min) / (max - min)) * 100;
+	input.closest(".range-shell")?.style.setProperty("--slider-progress", `${Math.min(100, Math.max(0, percent))}%`);
+}
+
+document.querySelectorAll(".volume-arrow").forEach(button => {
+	button.addEventListener("click", () => {
+		const input = document.getElementById(button.dataset.volumeInput);
+		if(!input) return;
+		const nextValue = Number(input.value) + Number(button.dataset.step || 1);
+		input.value = String(Math.min(Number(input.max), Math.max(Number(input.min), nextValue)));
+		input.dispatchEvent(new Event("input", { bubbles: true }));
+	});
+});
+
+document.querySelectorAll(".volume-value").forEach(display => {
+	const input = document.getElementById(display.htmlFor);
+	if(!input) return;
+	const finishEditing = () => {
+		if(display.contentEditable !== "true") return;
+		const parsed = Number.parseInt(display.textContent.trim(), 10);
+		if(Number.isFinite(parsed)) {
+			input.value = String(Math.min(Number(input.max), Math.max(Number(input.min), parsed)));
+			input.dispatchEvent(new Event("input", { bubbles: true }));
+		}
+		display.contentEditable = "false";
+		updateSettingsVolumeDisplay(input, display);
+	};
+
+	display.addEventListener("click", () => {
+		display.contentEditable = "true";
+		display.focus();
+	});
+	display.addEventListener("keydown", event => {
+		if(event.key === "Enter") { event.preventDefault(); display.blur(); }
+		if(event.key === "Escape") { display.contentEditable = "false"; updateSettingsVolumeDisplay(input, display); display.blur(); }
+	});
+	display.addEventListener("blur", finishEditing);
+});
+themeMusicGrid?.addEventListener("click", event => {
+	const card = event.target.closest("[data-theme]");
+	if(!card) return;
+	const selections = getThemeMusicSelections();
+	const theme = card.dataset.theme;
+	setThemeMusicSelections(selections.includes(theme)
+		? selections.filter(item => item !== theme)
+		: [...selections, theme]);
+});
+themeMusicSelectAll?.addEventListener("change", () => {
+	setThemeMusicSelections(themeMusicSelectAll.checked ? THEME_MUSIC_OPTIONS : []);
+});
+renderThemeMusicCards();
+startThemeMusic();
 
 // #endregion
 
@@ -1230,6 +1548,119 @@ Points needed: ${pointsrequired}`;
 
 // #region Popups
 
+
+const MAIL_ITEMS = [
+	{ id: 2, tag: "System", 
+		title: "SFX & UI Update!", 
+		from: "navoJ", 
+		time: "2026-09-14T22:30:00+02:00", 
+		body: "Hello There!\n\nAdded Sound Effects\nYou can now pick lobby theme songs to play in the background!\nYou can also enable hero voicelines when you select them! <i>(Special thanks to <a href='https://www.nexusmods.com/profile/paillettesbr05' target='_blank'>Paillette (Audio Mod Maker)</a> and <a href='https://www.nexusmods.com/profile/roomnumber16' target='_blank'>roomnumber16 (Mod Maker)</a>, adding these sounds would have been much harder without their help!)</i>\n\nMailbox\nFrom now on, patch notes and news will be displayed here, so you can easily keep up with the latest updates.\n\nImproved Settings\nWith all the new sound features, you can now turn them off individually or adjust their volume directly from the Settings menu.\n\nHappy grinding, everyone! 💙" },
+	{ id: 1, tag: "System", 
+		title: "S10 is here!", 
+		from: "navoJ", 
+		time: "2026-09-11T12:55:00+02:00", 
+		body: "Hello grinders!\n\nIn todays patch you will find Gorr was added along side all S9.5 and first week S10 skins for hero picker. Enjoy 😁" },
+];
+
+let selectedMailId = MAIL_ITEMS[0].id;
+
+function formatMailTime(time){
+	const date = new Date(time);
+	if(Number.isNaN(date.getTime())) return time;
+	const dayFirst = mailUseDayFirstDate?.checked ?? true;
+	const use24HourClock = mailUse24HourClock?.checked ?? true;
+	const parts = new Intl.DateTimeFormat("en-GB", {
+		day: "2-digit",
+		month: "2-digit",
+		year: "numeric",
+	}).formatToParts(date).reduce((values, part) => {
+		values[part.type] = part.value;
+		return values;
+	}, {});
+	const localDate = dayFirst
+		? `${parts.day}/${parts.month}/${parts.year}`
+		: `${parts.month}/${parts.day}/${parts.year}`;
+	const localTime = new Intl.DateTimeFormat(use24HourClock ? "en-GB" : "en-US", {
+		hour: "2-digit",
+		minute: "2-digit",
+		hour12: !use24HourClock,
+	}).format(date);
+	return `${localDate}, ${localTime}`;
+}
+
+function initializeMailboxTimeSettings(){
+	if(!mailUse24HourClock || !mailUseDayFirstDate) return;
+	mailUse24HourClock.checked = localStorage.getItem(MAIL_24_HOUR_CLOCK_KEY) !== "false";
+	mailUseDayFirstDate.checked = localStorage.getItem(MAIL_DAY_FIRST_DATE_KEY) !== "false";
+	[mailUse24HourClock, mailUseDayFirstDate].forEach(toggle => {
+		toggle.addEventListener("change", () => {
+			localStorage.setItem(
+				toggle === mailUse24HourClock ? MAIL_24_HOUR_CLOCK_KEY : MAIL_DAY_FIRST_DATE_KEY,
+				String(toggle.checked)
+			);
+			renderMailbox();
+		});
+	});
+}
+
+initializeMailboxTimeSettings();
+
+function getReadMails(){
+	try {
+		const ids = JSON.parse(localStorage.getItem(READ_MAILS_KEY) || "[]");
+		return new Set(Array.isArray(ids) ? ids.map(Number) : []);
+	} catch {
+		return new Set();
+	}
+}
+
+function saveReadMails(readMails){
+	localStorage.setItem(READ_MAILS_KEY, JSON.stringify([...readMails]));
+	updateMailNotification(readMails);
+}
+
+function updateMailNotification(readMails = getReadMails()){
+	const hasUnread = MAIL_ITEMS.some(mail => !readMails.has(mail.id));
+	document.querySelector(".mail")?.classList.toggle("has-unread", hasUnread);
+}
+
+function renderMailbox(){
+	const list = document.getElementById("mailList");
+	const detail = document.getElementById("mailDetail");
+	if(!list || !detail) return;
+	const readMails = getReadMails();
+	const activeMail = MAIL_ITEMS.find(mail => mail.id === selectedMailId) || MAIL_ITEMS[0];
+	list.innerHTML = MAIL_ITEMS.map(mail => {
+		const state = mail.id === activeMail.id ? "is-selected" : readMails.has(mail.id) ? "is-read" : "is-unread";
+		const localTime = formatMailTime(mail.time);
+		return `<button class="mail-item ${state}" type="button" data-mail-id="${mail.id}">
+			<img class="mail-item-icon" src="assets/${mail.id === activeMail.id ? "mailopen.png" : "mailclosed.png"}" alt="">
+			<span class="mail-item-content"><span class="mail-item-top"><span class="mail-tag ${mail.tag.toLowerCase()}">${mail.tag}</span><span class="mail-item-title">${mail.title}</span></span><span class="mail-item-meta">FROM: ${mail.from} &nbsp;&nbsp; TIME: ${localTime}</span></span>
+		</button>`;
+	}).join("");
+	list.querySelectorAll(".mail-item").forEach(button => {
+		addUiSounds(button, { click: "SoftClick", hover: "hover1", maxVolume: 0.5 });
+	});
+	syncScrollbarHeadPosition(list);
+	detail.innerHTML = `<div class="mail-detail-heading"><span class="mail-tag ${activeMail.tag.toLowerCase()}">${activeMail.tag}</span><h2>${activeMail.title}</h2></div><p class="mail-detail-meta">FROM: ${activeMail.from} &nbsp;&nbsp; TIME: ${formatMailTime(activeMail.time)}</p><div class="mail-detail-rule"></div><div class="mail-detail-body">${activeMail.body}</div>`;
+	updateMailNotification(readMails);
+}
+
+document.getElementById("mailList")?.addEventListener("click", event => {
+	const item = event.target.closest("[data-mail-id]");
+	if(!item) return;
+	selectedMailId = Number(item.dataset.mailId);
+	const readMails = getReadMails();
+	readMails.add(selectedMailId);
+	saveReadMails(readMails);
+	renderMailbox();
+});
+
+document.getElementById("markAllMailsRead")?.addEventListener("click", () => {
+	saveReadMails(new Set(MAIL_ITEMS.map(mail => mail.id)));
+	renderMailbox();
+});
+
 function setupPanel(buttonSelector, panelId){
 	const btn = document.querySelector(buttonSelector);
 	const panel = document.getElementById(panelId);
@@ -1248,8 +1679,231 @@ function setupPanel(buttonSelector, panelId){
 setupPanel(".infobutton", "infoPanel");
 setupPanel("#about", "aboutPanel");
 setupPanel(".settings", "settingsPanel");
+setupPanel(".mail", "mailPanel");
+
+const SETTINGS_HELP_DEFAULT = {
+	title: "SETTINGS",
+	description: "Customize your calculator experience, audio, account sync, and saved progress.",
+};
+
+function setupSettingsHelp(){
+	const title = document.getElementById("settingsHelpTitle");
+	const description = document.getElementById("settingsHelpDescription");
+	const note = document.getElementById("settingsHelpNote");
+	if(!title || !description || !note) return;
+
+	const showDefault = () => {
+		title.textContent = SETTINGS_HELP_DEFAULT.title;
+		description.textContent = SETTINGS_HELP_DEFAULT.description;
+		note.textContent = SETTINGS_HELP_DEFAULT.note;
+	};
+	const showHelp = element => {
+		title.textContent = element.dataset.settingsHelpTitle;
+		description.textContent = element.dataset.settingsHelp;
+	};
+
+	document.querySelectorAll("[data-settings-help]").forEach(element => {
+		element.addEventListener("mouseenter", () => showHelp(element));
+		element.addEventListener("mouseleave", showDefault);
+		element.addEventListener("focusin", () => showHelp(element));
+		element.addEventListener("focusout", event => {
+			if(!element.contains(event.relatedTarget)) showDefault();
+		});
+	});
+}
+
+setupSettingsHelp();
+
+function syncScrollbarHeadPosition(container){
+	const maximumScroll = container.scrollHeight - container.clientHeight;
+	const progress = maximumScroll > 0 ? container.scrollTop / maximumScroll : 0;
+	container.classList.toggle("scrollbar-head-follows-scroll", maximumScroll > 0);
+	container.style.setProperty("--scrollbar-head-position", `${Math.min(1, Math.max(0, progress)) * 100}%`);
+}
+
+function setupScrollbarHeadPositions(){
+	const containers = document.querySelectorAll(".hero-grid, .settingscontent, .settings-layout, .mail-list");
+	containers.forEach(container => {
+		const sync = () => syncScrollbarHeadPosition(container);
+		container.addEventListener("scroll", sync, { passive: true });
+		new ResizeObserver(sync).observe(container);
+		sync();
+	});
+}
+
+setupScrollbarHeadPositions();
+
+document.querySelector(".mail")?.addEventListener("click", renderMailbox);
+updateMailNotification();
 setupPanel("#discordBot", "discordBotPanel");
 setupPanel(".changecostume", "costumeModal");
+setupPanel("#themePickerButton", "themeMusicModal");
+
+
+addUiSounds(document.getElementById("escMenuButton"), { click: "menuBack", hover:false });
+
+document.querySelectorAll(".settingsscreen .savefilebutton").forEach(button => {
+	addUiSounds(button, { click: "leftClick1", hover: "mainhover" });
+});
+document.querySelectorAll(".settingsscreen .mobile-popup-close, .mailscreen .mobile-popup-close").forEach(button => {
+	addUiSounds(button, { click: "menuBack", hover: "hover1", maxVolume: 0.5 });
+});
+
+/* checkbox */
+
+document.querySelectorAll(".homebutton").forEach(button => {
+	addUiSounds(button, {
+		click: "leftClick1",
+		hover: "mainhover"
+	});
+});
+document.querySelectorAll(".herobutton").forEach(button => {
+	addUiSounds(button, {
+		click: "heroPicker",
+		hover: "mainhover",
+    	maxVolume: 0.75
+	});
+});
+
+
+document.querySelectorAll(".herocard").forEach(button => {
+	addUiSounds(button, {
+		click: "herocardclick",
+		hover: "hover1",
+    	maxVolume: 0.3
+	});
+});
+
+document.querySelectorAll(".UIHover").forEach(button => {
+	addUiSounds(button, {
+		click: false,
+		hover: "hover1",
+    	maxVolume: 0.3
+	});
+});
+document.querySelectorAll(".UIClick1").forEach(button => {
+	addUiSounds(button, {
+		click: "leftClick1",
+		hover: false,
+    	maxVolume: 0.3
+	});
+});
+document.querySelectorAll(".UIClick2").forEach(button => {
+	addUiSounds(button, {
+		click: "leftClick2",
+		hover: false,
+    	maxVolume: 0.3
+	});
+});
+document.querySelectorAll(".UISoftClick").forEach(button => {
+	addUiSounds(button, {
+		click: "SoftClick",
+		hover: false,
+	});
+});
+document.querySelectorAll(".UISoftClick50").forEach(button => {
+	addUiSounds(button, {
+		click: "SoftClick",
+		hover: false,
+    	maxVolume: 0.5
+	});
+});
+document.querySelectorAll(".costume-modal-toolbar").forEach(button => {
+	addUiSounds(button, {
+		click: "SoftClick",
+		hover: false,
+	});
+});
+document.querySelectorAll(".input-mission").forEach(button => {
+	addUiSounds(button, {
+		click: "SoftClick",
+		hover: false,
+    	maxVolume: 0.5
+	});
+});
+document.querySelectorAll("a").forEach(button => {
+	addUiSounds(button, {
+		click: "SoftClick",
+		hover: "leftClick2",
+    	maxVolume: 0.2
+	});
+});
+document.querySelectorAll(".slider-toggle").forEach(button => {
+	addUiSounds(button, {
+		click: "SoftClick",
+		hover: false,
+	});
+});
+document.querySelectorAll(".yellowbutton").forEach(button => {
+	addUiSounds(button, {
+		click: "SoftClick",
+		hover: false,
+	});
+});
+
+document.querySelectorAll(".UIdropdown").forEach(button => {
+	addUiSounds(button, {
+		click: "Dropdown",
+		hover: false,
+	});
+});
+
+const CLOSEABLE_MENU_IDS = [
+	"modal", "costumeModal", "themeMusicModal", "infoPanel",
+	"aboutPanel", "settingsPanel", "mailPanel", "discordBotPanel", "giftPanel"
+];
+
+function syncEscMenuButton(){
+	const hasOpenMenu = CLOSEABLE_MENU_IDS.some(id => {
+		const menu = document.getElementById(id);
+		return menu && getComputedStyle(menu).display !== "none";
+	});
+	document.getElementById("escMenuButton")?.classList.toggle("is-visible", hasOpenMenu);
+}
+
+CLOSEABLE_MENU_IDS.forEach(id => {
+	const menu = document.getElementById(id);
+	if(menu) new MutationObserver(syncEscMenuButton).observe(menu, { attributes: true, attributeFilter: ["style", "class"] });
+});
+syncEscMenuButton();
+
+function closeOpenMenus(){
+	let closedMenu = false;
+	CLOSEABLE_MENU_IDS.forEach(id => {
+		const menu = document.getElementById(id);
+		if(menu && getComputedStyle(menu).display !== "none"){
+			menu.style.display = "none";
+			closedMenu = true;
+		}
+	});
+	syncEscMenuButton();
+	return closedMenu;
+}
+
+document.getElementById("escMenuButton")?.addEventListener("click", () => closeOpenMenus());
+document.addEventListener("keydown", event => {
+	if(event.key === "Escape"){
+		if(closeOpenMenus()) {
+			playUiSound("menuBack");
+		} else {
+			const settingsPanel = document.getElementById("settingsPanel");
+			if(settingsPanel) {
+				settingsPanel.style.display = "flex";
+				syncEscMenuButton();
+			}
+		}
+		return;
+	}
+
+	if(event.key.toLowerCase() !== "z") return;
+	const target = event.target;
+	if(target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target?.isContentEditable) return;
+	event.preventDefault();
+	themeMusicModal.style.display = "flex";
+	renderThemeMusicCards();
+	syncEscMenuButton();
+	playUiSound("heroPickerOpen");
+});
 
 costumeSelectAll?.addEventListener("change", () => {
 	if(!currentHero) return;
@@ -1607,6 +2261,7 @@ function clearCalculatorData() {
 		if(
 			key.startsWith("hero") ||
 			key === "strikeSquad" ||
+			key === READ_MAILS_KEY ||
 			key === LAST_SELECTED_HERO_KEY
 		){
 			keys.push(key);
@@ -1916,6 +2571,7 @@ function buildSupabaseDataFromLocalStorage() {
 		localStorage.getItem("strikeSquad") || "[]"
 	));
 	heroData.heroCostumes = getAllCostumeSelections();
+	heroData.ReadMails = [...getReadMails()];
     return heroData;
 }
 
@@ -1929,6 +2585,11 @@ function syncSupabaseToLocalStorage(dbData) {
 
 	if(dbData.heroCostumes && typeof dbData.heroCostumes === "object"){
 		localStorage.setItem(HERO_COSTUME_STATE_KEY, JSON.stringify(dbData.heroCostumes));
+	}
+
+	if(Array.isArray(dbData.ReadMails)){
+		localStorage.setItem(READ_MAILS_KEY, JSON.stringify(dbData.ReadMails.map(Number)));
+		updateMailNotification();
 	}
 
     if (!dbData.heroes) return;
