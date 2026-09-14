@@ -2599,7 +2599,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .profile-name{
-	color: #black;
+	color: black;
 }
 
 .settingsscreen .discord-account { gap: 12px; }
