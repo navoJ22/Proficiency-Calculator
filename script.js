@@ -321,7 +321,7 @@ function renderThemeMusicCards(){
 			<span class="theme-music-card-check" aria-hidden="true"></span>
 		</button>`).join("");
 	themeMusicGrid.querySelectorAll(".theme-music-card").forEach(card => {
-		addUiSounds(card, { click: "SoftClick", hover: "Hover1" });
+		addUiSounds(card, { click: "SoftClick", hover: "hover1" });
 	});
 	updateThemeMusicSummary();
 }
@@ -476,7 +476,7 @@ function renderCostumeCards(){
 			<div class="costume-card-check" aria-hidden="true"><div class="check-selected"></div></div>
 			<img src="${option.image}" class="" alt="${currentHero.name} ${option.name}">
 		`;
-		addUiSounds(card, { click: "SoftClick", hover: "Hover1" });
+		addUiSounds(card, { click: "SoftClick", hover: "hover1" });
 
 		card.addEventListener("click", () => {
 			const nextSelectedIds = new Set(getHeroCostumeSelections(currentHero));
@@ -870,6 +870,11 @@ function renderHeroes(filter = "All", search = "") {
 		`;
 
 		card.onclick = () => selectHero(hero);
+		addUiSounds(card, {
+			click: "herocardclick",
+			hover: "hover1",
+			maxVolume: 0.3
+		});
 
 		card.oncontextmenu = e => {
 			e.preventDefault();
@@ -1766,14 +1771,6 @@ document.querySelectorAll(".herobutton").forEach(button => {
 });
 
 
-document.querySelectorAll(".herocard").forEach(button => {
-	addUiSounds(button, {
-		click: "herocardclick",
-		hover: "hover1",
-    	maxVolume: 0.3
-	});
-});
-
 document.querySelectorAll(".UIHover").forEach(button => {
 	addUiSounds(button, {
 		click: false,
@@ -1902,7 +1899,7 @@ document.addEventListener("keydown", event => {
 	themeMusicModal.style.display = "flex";
 	renderThemeMusicCards();
 	syncEscMenuButton();
-	playUiSound("heroPickerOpen");
+	playUiSound("heroPicker");
 });
 
 costumeSelectAll?.addEventListener("change", () => {
@@ -2006,6 +2003,21 @@ function finishTutorial(){
 	tutorialWaitingForHero = false;
 	localStorage.setItem(TUTORIAL_COMPLETE_KEY, "true");
 }
+
+function stopTutorialWhenOpeningOtherMenu(menu){
+	if(tutorialActive && menu.id !== "modal" && getComputedStyle(menu).display !== "none"){
+		finishTutorial();
+	}
+}
+
+CLOSEABLE_MENU_IDS
+	.filter(id => id !== "modal")
+	.forEach(id => {
+		const menu = document.getElementById(id);
+		if(!menu) return;
+		new MutationObserver(() => stopTutorialWhenOpeningOtherMenu(menu))
+			.observe(menu, { attributes: true, attributeFilter: ["style", "class"] });
+	});
 
 function startTutorial(){
 	if(!tutorialHeroButton) return;

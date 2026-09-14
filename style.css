@@ -2117,10 +2117,13 @@ input[type="number"]::-webkit-outer-spin-button {
 	clip-path: polygon(0 0, 100% 0, 95% 100%, 0 100%);
 }
 
-.mail-header h1 { margin: 0;
-	font-size: 38px;
+.mail-header h1 {
+	margin: 0;
+	font-family: "Saira Condensed", sans-serif;
+	font-size: 30px;
+	font-weight: 500;
 	font-style: italic;
-	font-weight: 800;
+	letter-spacing: .02em;
 }
 
 
@@ -2330,7 +2333,6 @@ input[type="number"]::-webkit-outer-spin-button {
 	font-weight: 500;
 	font-style: italic;
 	letter-spacing: .02em;
-	text-transform: uppercase;
 }
 
 .settings-header p {
@@ -2594,6 +2596,10 @@ input[type="number"]::-webkit-outer-spin-button {
 	padding: 14px 20px;
 	background: rgba(248, 250, 255, .88);
 	border-bottom: 2px solid #aeb9d8;
+}
+
+.profile-name{
+	color: #black;
 }
 
 .settingsscreen .discord-account { gap: 12px; }
